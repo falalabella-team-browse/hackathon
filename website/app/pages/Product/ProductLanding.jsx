@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from "styled-components";
 
 const PdpBody = styled.div`
@@ -172,6 +172,13 @@ const AddToCartButton = styled.button`
 `
 
 const ProductLanding = () => {
+
+
+    useEffect(()=>{
+        const element = document.getElementById("reviews");
+        RNR.load(element);
+    })
+
     return (
         <PdpBody>
             <Container>
