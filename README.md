@@ -20,6 +20,11 @@ yarn workspace server install
 yarn workspace website install
 ```
 
+### Build Plugin
+```
+yarn workspace plugin build
+```
+
 ### Run application
 
 ```
@@ -69,3 +74,20 @@ yarn workspace website add <list-of-package>
 `http` - REST API Declarations
 
 `pages` - Root pages
+
+
+
+### Load Review & Ratings Plugins
+
+1. Insert Script in HTML
+```html
+<script src="<path-to-script>/rnr-script.js"></script>
+```
+
+2. Load ratings module
+```html
+<script>
+    const element = document.getElementById("reviews");
+    RNR.load(reviews);
+</script>
+```
