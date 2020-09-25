@@ -1,12 +1,13 @@
-import React from 'react';
-import { Container } from './styles';
+import React from "react";
+import Shell from "../Shell/Shell";
+import { Container } from "./styles";
 
 const RootContainer = () => {
-    return (
-        <Container>
-            rerge
-        </Container>
-    )
+  return (
+    <Container>
+      <Shell />
+    </Container>
+  );
 };
 
 export default RootContainer;
