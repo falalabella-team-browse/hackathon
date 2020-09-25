@@ -35,19 +35,16 @@ function restClient(fastify, options, next) {
         ...headers,
         "Content-Type": "application/json"
       };
-
-      const body = JSON.stringify(data);
       let response = {};
+      const body = JSON.stringify(data);
+
       try {
-        response = await fetch(url, {
-          method: "POST",
-          body,
-          headers: reqHeaders
-        });
-        console.log("Failed", e)
+        const res = await fetch(url, { method: 'POST', headers: reqHeaders, body});
+        response = res.ok ? await res.json() : {};
       } catch (e) {
         console.log("Failed: - Catch", e)
       }
+  
       return response;
     }
   };

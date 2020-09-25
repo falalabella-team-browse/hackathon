@@ -1,8 +1,33 @@
 
 const constants = require('../../configs/constants');
 
-const postHandler = fastify => async (req, res) => {
+const handleResponse = (response, reply) => {
+    if(response && response.error) {
+        reply.code(response.status || 500).send({
+            error : response.error
+        });
+        return
+    }
+
+    return reply.code(200).send({
+        data : response
+    });
+};
+
+const badRequest = (code = 400, reply,  msg = "Bad Request") => {
+    return reply.code(code).send({
+        error : {
+            reason: msg
+        }
+    });
+};
+
+const postHandler = fastify => async (req, reply) => {
     const { entityId, rating = 0, title = "",  description = "", author = "" } = req.body;
+
+    if(rating < 1 || rating > 5){
+        badRequest(400, reply, "Invalid Rating")
+    }
     
     const headers = {
         "Authorization": "Basic ZWxhc3RpYzptRG9HTFA1VmNuU3poNEVWeU4wek1FV0o="
@@ -26,11 +51,15 @@ const postHandler = fastify => async (req, res) => {
 
     const response = await fastify.restClient.post(constants.CREAT_NEW_REVIEW_URL, reqBody, headers)
 
-    return response;
+    handleResponse(response, reply)
 };
 
-const editHandler = fastify => async (req, res) => {
+const editHandler = fastify => async (req, reply) => {
     const { id, rating = 0, title = "",  description = ""} = req.body;
+
+    if(rating < 1 || rating > 5){
+        badRequest(400, reply)
+    }
     
     const headers = {
         "Authorization": "Basic ZWxhc3RpYzptRG9HTFA1VmNuU3poNEVWeU4wek1FV0o="
@@ -52,10 +81,10 @@ const editHandler = fastify => async (req, res) => {
 
     const response = await fastify.restClient.post(url, reqBody, headers)
 
-    return response;
+    handleResponse(response, reply)
 };
 
-const getHandler = fastify => async (req, res) => {
+const getHandler = fastify => async (req, reply) => {
     const { id } = req.params;
 
     const headers = {
@@ -66,12 +95,10 @@ const getHandler = fastify => async (req, res) => {
 
     const response = await fastify.restClient.get(url, headers);
 
-    console.log("response", response)
-
-    return response
+    handleResponse(response, reply)
 };
 
-const deleteHandler = fastify => async (req, res) => {
+const deleteHandler = fastify => async (req, reply) => {
     const { id } = req.params;
 
     const headers = {
@@ -88,10 +115,10 @@ const deleteHandler = fastify => async (req, res) => {
 
     const response = await fastify.restClient.post(url, reqBody, headers)
 
-    return response;
+    handleResponse(response, reply)
 };
 
-const markHelpFul = fastify => async (req, res) => {
+const markHelpFul = fastify => async (req, reply) => {
     const { id, helpful_count } = req.body;
 
     const headers = {
@@ -108,8 +135,12 @@ const markHelpFul = fastify => async (req, res) => {
 
     const response = await fastify.restClient.post(url, reqBody, headers)
 
-    return response;
+    handleResponse(response, reply)
 };
+
+const averageRatings = fastify => async (req, reply) => {
+
+}
 
 module.exports = async fastify => {
   fastify.post("/ratingsAndReviews", postHandler(fastify));
@@ -117,4 +148,5 @@ module.exports = async fastify => {
   fastify.post("/ratingsAndReviews/edit", editHandler(fastify));
   fastify.get("/ratingsAndReviews/:id", getHandler(fastify));
   fastify.delete("/ratingsAndReviews/:id", deleteHandler(fastify));
+  fastify.post("/averageRatings", averageRatings(fastify));
 };
