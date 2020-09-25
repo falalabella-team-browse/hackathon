@@ -91,3 +91,44 @@ yarn workspace website add <list-of-package>
     RNR.load(reviews);
 </script>
 ```
+
+
+### Review n Ratings APIS
+
+1. Create new review
+   
+   ```
+      (post) : 'api/v1/ratingsAndReviews'
+      (reqBody) : { entityId, rating , title,  description, author}
+
+   ```
+
+2. Edit review
+   
+   ```
+      (post) : 'api/v1/ratingsAndReviews/edit'
+      (reqBody) : { id, rating , title,  description}
+      
+   ```
+
+3. Mark review as Helpfull
+   
+   ```
+      (post) : 'api/v1/ratingsAndReviews/flag'
+      (reqBody) : { id, helpful_count}
+      
+   ```
+
+4. Remove/Delete review
+   
+   ```
+      (delete) : 'api/v1/ratingsAndReviews/{id}'
+   ```
+
+5. Get Review with Id
+   
+   ```
+      (get) : 'api/v1/ratingsAndReviews/{id}'
+      
+   ```
+
