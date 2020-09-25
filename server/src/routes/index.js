@@ -1,6 +1,6 @@
 const authRoutes = require('./auth');
 const analyserRoutes = require('./analyser');
-const reviewsNratings = require("../domains/reviewsNratings");
+const ratingsAndReviews = require("../domains/ratingsAndReviews");
 
 const routes = async (fastify, opt, next) => {
 	fastify.get('/', (_, res) => {
@@ -12,7 +12,7 @@ const routes = async (fastify, opt, next) => {
 
   fastify.register(authRoutes, { prefix: '/auth' });
 	fastify.register(analyserRoutes, { prefix: '/analyse' });
-	fastify.register(reviewsNratings);
+	fastify.register(ratingsAndReviews);
 
 	next();
 };

@@ -112,9 +112,9 @@ const markHelpFul = fastify => async (req, res) => {
 };
 
 module.exports = async fastify => {
-  fastify.post("/review", postHandler(fastify));
-  fastify.post("/flag/review", markHelpFul(fastify));
-  fastify.post("/edit/review", editHandler(fastify));
-  fastify.get("/review/:id", getHandler(fastify));
-  fastify.delete("/review/:id", deleteHandler(fastify));
+  fastify.post("/ratingsAndReviews", postHandler(fastify));
+  fastify.post("/ratingsAndReviews/flag", markHelpFul(fastify));
+  fastify.post("/ratingsAndReviews/edit", editHandler(fastify));
+  fastify.get("/ratingsAndReviews/:id", getHandler(fastify));
+  fastify.delete("/ratingsAndReviews/:id", deleteHandler(fastify));
 };

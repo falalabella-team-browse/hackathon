@@ -98,7 +98,7 @@ yarn workspace website add <list-of-package>
 1. Create new review
    
    ```
-      (post) : 'api/v1/review'
+      (post) : 'api/v1/ratingsAndReviews'
       (reqBody) : { entityId, rating , title,  description, author}
 
    ```
@@ -106,7 +106,7 @@ yarn workspace website add <list-of-package>
 2. Edit review
    
    ```
-      (post) : 'api/v1/edit/review'
+      (post) : 'api/v1/ratingsAndReviews/edit'
       (reqBody) : { id, rating , title,  description}
       
    ```
@@ -114,7 +114,7 @@ yarn workspace website add <list-of-package>
 3. Mark review as Helpfull
    
    ```
-      (post) : 'api/v1/flag/review'
+      (post) : 'api/v1/ratingsAndReviews/flag'
       (reqBody) : { id, helpful_count}
       
    ```
@@ -122,13 +122,13 @@ yarn workspace website add <list-of-package>
 4. Remove/Delete review
    
    ```
-      (delete) : 'api/v1/review/{id}'
+      (delete) : 'api/v1/ratingsAndReviews/{id}'
    ```
 
 5. Get Review with Id
    
    ```
-      (get) : 'api/v1/review/{id}'
+      (get) : 'api/v1/ratingsAndReviews/{id}'
       
    ```
 
