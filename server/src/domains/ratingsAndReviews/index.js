@@ -1,5 +1,6 @@
 
 const constants = require('../../configs/constants');
+const get = require("lodash/get");
 
 const handleResponse = (response, reply) => {
     if(response && response.error) {
@@ -25,6 +26,8 @@ const badRequest = (code = 400, reply,  msg = "Bad Request") => {
 const postHandler = fastify => async (req, reply) => {
     const { entityId, rating = 0, title = "",  description = "", author = "" } = req.body;
 
+    // sentiment analysis to go here 
+
     if(rating < 1 || rating > 5){
         badRequest(400, reply, "Invalid Rating")
     }
@@ -38,7 +41,7 @@ const postHandler = fastify => async (req, reply) => {
         rating,
         title,
         description,
-        author: 12,
+        author,
         created_date: new Date(),
         modified_date: new Date(),
         isActive:true,
@@ -51,7 +54,26 @@ const postHandler = fastify => async (req, reply) => {
 
     const response = await fastify.restClient.post(constants.CREAT_NEW_REVIEW_URL, reqBody, headers)
 
-    handleResponse(response, reply)
+    if(response && response.error) {
+        reply.code(response.status || 500).send({
+            error : response.error
+        });
+        return
+    }
+
+    const schema = {
+        "reviewId": response._id,
+        "author": author,
+        "entityId": entityId,
+        "title": title,
+        "description": description,
+        "rating": rating,
+        "reviewStatus": "Published"
+    }
+
+    return reply.code(200).send({
+        ...schema
+    });
 };
 
 const editHandler = fastify => async (req, reply) => {
@@ -95,7 +117,28 @@ const getHandler = fastify => async (req, reply) => {
 
     const response = await fastify.restClient.get(url, headers);
 
-    handleResponse(response, reply)
+    if(response && response.error) {
+        reply.code(response.status || 500).send({
+            error : response.error
+        });
+        return
+    }
+
+    const { _source , _id } = response;
+
+    const schema = {
+        "reviewId": _id,
+        "author": _source.author,
+        "entityId": _source.entityId,
+        "title": _source.title,
+        "description": _source.description,
+        "rating": _source.rating,
+        "reviewStatus": _source.reviewStatus
+    }
+
+    return reply.code(200).send({
+        ...schema
+    });
 };
 
 const deleteHandler = fastify => async (req, reply) => {
@@ -139,7 +182,106 @@ const markHelpFul = fastify => async (req, reply) => {
 };
 
 const averageRatings = fastify => async (req, reply) => {
+    const { id } = req.params;
+    const headers = {
+        "Authorization": "Basic ZWxhc3RpYzptRG9HTFA1VmNuU3poNEVWeU4wek1FV0o="
+    };
+    const reqBody = {
+        "query":{
+           "bool":{
+              "must":[
+                 {
+                    "term":{
+                       "entityId":{
+                          "value": id
+                       }
+                    }
+                 }
+              ],
+              "must_not":[
+                 {
+                    "term":{
+                       "reviewStatus":{
+                          "value":"Abusive"
+                       }
+                    }
+                 }
+              ]
+           }
+        },
+        "aggs":{
+           "avg_rating":{
+              "avg":{
+                 "field":"rating"
+              }
+           },
+           "rating_buckets":{
+              "range":{
+                 "field":"rating",
+                 "ranges":[
+                    {
+                       "from":0.0,
+                       "to":1.0
+                    },
+                    {
+                       "from":1.0,
+                       "to":2.0
+                    },
+                    {
+                       "from":2.0,
+                       "to":3.0
+                    },
+                    {
+                       "from":3.0,
+                       "to":4.0
+                    },
+                    {
+                       "from":4.0,
+                       "to":5.01
+                    }
+                 ]
+              }
+           }
+        }
+    }
 
+    const response = await fastify.restClient.post(constants.SEARCH_URL, reqBody, headers)
+
+
+    if(response && response.error) {
+        reply.code(response.status || 500).send({
+            error : response.error
+        });
+        return
+    }
+
+    const enums = {
+        "0.0-1.0" : '1',
+        "1.0-2.0" : '2',
+        "2.0-3.0" : '3',
+        "3.0-4.0" : '4',
+        "4.0-5.01" : '5'
+    }
+
+    const totalNumberOfReviews = get(response, "hits.total.value", 0);
+    const averageRating = get(response, "aggregations.avg_rating.value", 0)
+    const buckets = get(response, "aggregations.rating_buckets.buckets", [])
+    const rating_buckets = buckets.map((bkt) => {
+        return {
+            key : enums[`${bkt.key}`],
+            value : bkt.doc_count
+        }
+    });
+
+    const schema = {
+        totalNumberOfReviews,
+        averageRating,
+        rating_buckets
+    }
+
+    return reply.code(200).send({
+        ...schema
+    });
 }
 
 module.exports = async fastify => {
@@ -148,5 +290,5 @@ module.exports = async fastify => {
   fastify.post("/ratingsAndReviews/edit", editHandler(fastify));
   fastify.get("/ratingsAndReviews/:id", getHandler(fastify));
   fastify.delete("/ratingsAndReviews/:id", deleteHandler(fastify));
-  fastify.post("/averageRatings", averageRatings(fastify));
+  fastify.get("/averageRatings/:id", averageRatings(fastify));
 };

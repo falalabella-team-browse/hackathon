@@ -14,6 +14,7 @@
     "fastify-env": "^2.0.1",
     "fastify-jwt": "^2.1.3",
     "fastify-plugin": "^2.3.3",
+    "loadash": "^1.0.0",
     "mongoose": "^5.10.4",
     "node-fetch": "^2.6.1",
     "nodemon": "^2.0.4",
