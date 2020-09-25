@@ -44,11 +44,9 @@ const analyse = ({ phrase, opts = {}, languageCode = 'en', callback }) => {
 		calculation.push(tokenScore);
 	}
 
-	const comparison = (positive.length / (positive.length + negative.length)) * 100;
 	var result = {
 		sentimentScore: score,
-		comparison,
-		sentimentFactor: utils.getSentimentFactor(comparison),
+		sentimentFactor: utils.getSentimentFactor(score),
 		tokens: tokens,
 		words: {
 			scanned: scanned.length,
