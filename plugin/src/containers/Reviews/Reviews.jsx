@@ -21,10 +21,10 @@ const ReviewList = styled.div`
 `;
 
 const OPTIONS = [
-  { label: "Most Relevant", value: "review_score:desc" },
-  { label: "Most Recent", value: "created_date:desc" },
-  { label: "Most Rated", value: "rating:desc" },
-  { label: "Least Rated", value: "rating:asc" },
+  { label: "Relevant", value: "review_score:desc" },
+  { label: "Recent", value: "created_date:desc" },
+  { label: "High to low", value: "rating:desc" },
+  { label: "Low to high", value: "rating:asc" },
   { label: "Most Helpful", value: "helpful_count:desc" },
 ];
 
