@@ -171,10 +171,10 @@ const AddToCartButton = styled.button`
 `;
 
 const ProductLanding = () => {
+  const { userId, productId } = useParams();
+
   useEffect(() => {
     const element = document.getElementById("reviews");
-
-    const { userId, productId } = useParams();
 
     RNR.setHost(process.env.BASE_URL);
     RNR.load(element, {
