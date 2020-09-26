@@ -38,6 +38,14 @@ const postHandler = fastify => async (req, reply) => {
 		badRequest(400, reply, 'Only 5 images are allowed');
 	}
 
+	if (!description) {
+		badRequest(400, reply, 'Description is mandatory');
+	}
+
+	if (!title) {
+		badRequest(400, reply, 'Title is mandatory');
+	}
+
 	if (title.length > 160) {
 		badRequest(400, reply, 'Invalid Title');
 	}
@@ -66,6 +74,7 @@ const postHandler = fastify => async (req, reply) => {
 		sentimentScore: sentiment,
 		helpful_count: 0,
 	});
+
 	const reqBody = {
 		entityId,
 		rating,
@@ -244,24 +253,22 @@ const averageRatings = (fastify, method = 'average') => async (req, reply) => {
 		Authorization: 'Basic ZWxhc3RpYzptRG9HTFA1VmNuU3poNEVWeU4wek1FV0o=',
 	};
 
-	const {
-		entityType = 'sku',
-	} = req.query;
+	const { entityType = 'sku' } = req.query;
 
-	const queryLabel = entityType === 'author' ?  'author' : 'entityId';
+	const queryLabel = entityType === 'author' ? 'author' : 'entityId';
 
 	const queryForAverage = {
-		must: [ generateQuery('entityId', id), generateQuery('reviewStatus', 'Published') ],
+		must: [generateQuery('entityId', id), generateQuery('reviewStatus', 'Published')],
 	};
 
 	const queryForAnalytics = {
-		must: [ generateQuery(queryLabel, id) ],
-	}
+		must: [generateQuery(queryLabel, id)],
+	};
 
-	const aggregator =  method === 'analytics' ? aggregator_Analytics : aggregator_Average; 
+	const aggregator = method === 'analytics' ? aggregator_Analytics : aggregator_Average;
 
 	const reqBody = {
-		size:0,
+		size: 0,
 		_source: false,
 		size: 0,
 		query: {
@@ -305,7 +312,7 @@ const averageRatings = (fastify, method = 'average') => async (req, reply) => {
 		rating_buckets,
 	};
 
-	if(method === 'analytics'){
+	if (method === 'analytics') {
 		schema['sentiment_buckets'] = sentiment_buckets;
 		schema['review_status'] = review_status;
 	}
