@@ -164,17 +164,27 @@ const Admin = () => {
 
     const [ loading, setLoading] = useState(false);
     const [ reviewsList , getReviewList] = useState([]);
+    const [ reviewStatus , setReviewStatus] = useState('Abusive');
+    const [ reviewSortBy , setReviewSortBy] = useState('');
+    const [ entity , setEntity] = useState('');
 
-    const datafetcher = async () => {
+    const sortOptions = [
+        { label: "Most Recent", value: "created_date:asc" },
+        { label: "Most Rated", value: "rating:asc" },
+        { label: "Most Helpful", value: "helpful_count:asc" },
+    ];
+
+    const datafetcher = async (initQuery) => {
         setLoading(true);
-        const response = await restClients.getAllReviews();
+        const response = await restClients.getAllReviews(initQuery);
         response.success ? getReviewList(response.body.data.data) : getReviewList([]);
         setLoading(false);
         return;
     }
 
     useEffect(()=>{
-       datafetcher();
+       const initQuery = 'reviewStatus=Abusive';
+       datafetcher(initQuery);
     }, [])
 
 
@@ -194,12 +204,12 @@ const Admin = () => {
     }
     
     const EditReviewButtons = ({review}) => {
-        const { reviewId } = review;
+        const { id } = review;
         if(review.reviewStatus === 'Abusive') {
             return(
                 <FlexWrapper>
-                    <Button className="danger" onClick={() => updateReview(reviewId, 'Removed')}> Remove </Button>
-                    <Button className="success" onClick={() => updateReview(reviewId, 'Published')}> Publish </Button>
+                    <Button className="danger" onClick={() => updateReview(id, 'Removed')}> Remove </Button>
+                    <Button className="success" onClick={() => updateReview(id, 'Published')}> Publish </Button>
                 </FlexWrapper>
             )
         }
@@ -207,15 +217,15 @@ const Admin = () => {
         if(review.reviewStatus === 'Removed') {
             return(
                 <FlexWrapper>
-                    <Button className="success" onClick={() => updateReview(reviewId, 'Published')}> Publish </Button>
+                    <Button className="success" onClick={() => updateReview(id, 'Published')}> Publish </Button>
                 </FlexWrapper>
             )
         }
     
         return(
             <FlexWrapper>
-                <Button className="danger" onClick={() => updateReview(reviewId, 'Removed')}> Remove </Button>
-                <Button className="warning" onClick={() => updateReview(reviewId, 'Abusive')}> Abusive </Button>
+                <Button className="danger" onClick={() => updateReview(id, 'Removed')}> Remove </Button>
+                <Button className="warning" onClick={() => updateReview(id, 'Abusive')}> Abusive </Button>
             </FlexWrapper>
         )
     }
@@ -233,6 +243,38 @@ const Admin = () => {
         )
     }
 
+    const statusChangeHandler = (e) => {
+        setReviewStatus(e.target.value)
+    }
+
+    const sortByChangeHandler = (e) => {
+        setReviewSortBy(e.target.value)
+    }
+
+    const searchByEntity = (e) => {
+        setEntity(e.target.value)
+    }
+
+    const handleSearch = () => {
+        let query = ''
+        if(reviewStatus){
+            query=`reviewStatus=${reviewStatus}&`
+        }
+        if(reviewSortBy){
+            query=`sort=${reviewSortBy}&`
+        }
+        if(entity){
+            query=`entityId=${entity}`
+        }
+        datafetcher(query);
+    }
+
+    useEffect(()=>{
+        handleSearch();
+    }, [reviewStatus, reviewSortBy])
+
+
+
     return(
         <BodyWrapper>
             <Container>
@@ -241,29 +283,30 @@ const Admin = () => {
                         <FilterContainer>
                             <div>
                                 <label for="cars">Review Status:</label>
-                                <select>
-                                    <option> Abusive </option>
-                                    <option> Removed </option>
-                                    <option> Published </option>
+                                <select value={reviewStatus} onChange={statusChangeHandler}>
+                                    <option value="Abusive"> Abusive </option>
+                                    <option value="Removed"> Removed </option>
+                                    <option value="Published"> Published </option>
                                 </select>
                             </div>
 
                             <div>
                                 <label for="cars">Sort By:</label>
-                                <select>
-                                    <option> Recent </option>
-                                    <option> Helpul </option>
-                                    <option> Sentiment </option>
+                                <select value={reviewSortBy} onChange={sortByChangeHandler}>
+                                    <option value=""> default </option>
+                                    {sortOptions.map((item)=>(
+                                        <option value={item.value} key={item.value}>{item.label}</option>
+                                    ))}
                                 </select>
                             </div>
 
                             <div>
                                 <label for="cars">Search By Entity:</label>
-                                <input  />
+                                <input placeholder="Product Id" value={entity} onChange={searchByEntity}/>
                             </div>
 
                             <div>
-                                 <Button className="big success"> Search </Button>
+                                 <Button className="big success" onClick={handleSearch}> Search </Button>
                             </div>
                         </FilterContainer>
 
