@@ -28,8 +28,8 @@ const LoadingContainer = styled.div`
 const OPTIONS = [
   { label: "Relevant", value: "review_score:desc" },
   { label: "Recent", value: "created_date:desc" },
-  { label: "High to low", value: "rating:desc" },
-  { label: "Low to high", value: "rating:asc" },
+  { label: "Rating - High to Low", value: "rating:desc" },
+  { label: "Rating - Low to High", value: "rating:asc" },
   { label: "Most Helpful", value: "helpful_count:desc" },
 ];
 
