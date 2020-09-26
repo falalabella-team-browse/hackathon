@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { FilledButton } from "../../components/Button";
 import CircularLoader from "../../components/CircluarLoader";
@@ -31,7 +31,9 @@ const OPTIONS = [
 const ReviewsContainer = ({ counter }) => {
   const [selected, setSelected] = useState(OPTIONS[0].value);
   const [reviews, setReviews] = useState([]);
-  const [loading, setLoading] = useState(false);
+
+  const loading = useRef();
+
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const [total, setTotal] = useState(0);
@@ -39,7 +41,7 @@ const ReviewsContainer = ({ counter }) => {
   const user = useUser();
 
   const handleOptionChange = (val) => {
-    if (loading) {
+    if (loading.current) {
       return;
     }
 
@@ -47,11 +49,11 @@ const ReviewsContainer = ({ counter }) => {
   };
 
   const loadReviews = async () => {
-    if (loading || !hasMore) {
+    if (loading.current || !hasMore) {
       return;
     }
 
-    setLoading(true);
+    loading.current = true;
 
     const data = await http.getAllReviews(user.productId, page, selected);
 
@@ -60,7 +62,7 @@ const ReviewsContainer = ({ counter }) => {
       !Array.isArray(data.body.data.data) ||
       data.body.data.data.length === 0
     ) {
-      setLoading(false);
+      loading.current = false;
       setHasMore(false);
       return;
     }
@@ -73,13 +75,15 @@ const ReviewsContainer = ({ counter }) => {
       setHasMore(false);
     }
 
+    console.log("done");
     setTotal(data.body.data.meta.total);
-    setLoading(false);
+
+    loading.current = false;
   };
 
   const reset = () => {
     if (page === 0) {
-      if (loading) {
+      if (loading.current) {
         return;
       }
 
@@ -90,7 +94,7 @@ const ReviewsContainer = ({ counter }) => {
   };
 
   useEffect(() => {
-    if (loading) {
+    if (loading.current) {
       return;
     }
 
@@ -108,7 +112,7 @@ const ReviewsContainer = ({ counter }) => {
   }, [counter]);
 
   const handleLoadMore = () => {
-    if (loading || !hasMore) {
+    if (loading.current || !hasMore) {
       return;
     }
 
@@ -136,7 +140,7 @@ const ReviewsContainer = ({ counter }) => {
 
         {hasMore && (
           <FilledButton onClick={handleLoadMore}>
-            {loading ? (
+            {loading.current ? (
               <CircularLoader size="18px" color="white" />
             ) : (
               "Load More"
