@@ -354,8 +354,15 @@ const searchRatings = fastify => async (req, reply) => {
 		return handleResponse({}, reply);
 	}
 
+	const sanitisedData = response.hits.hits.map(data => {
+		return {
+			id: data._id,
+			...data._source,
+		};
+	});
+
 	const results = {
-		data: response.hits.hits,
+		data: sanitisedData,
 		meta: {
 			total: response.hits.total.value,
 		},

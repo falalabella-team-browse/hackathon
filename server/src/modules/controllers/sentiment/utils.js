@@ -1,10 +1,5 @@
-const neutrals = require('./language/en/neutrals.json');
 const abusiveWords = require('./language/en/abusors.json');
 const language = require('./language');
-
-const removeNeutrals = (tokens = []) => {
-	return tokens.filter(token => !neutrals[token]);
-};
 
 const hasAbusivesContent = (tokens = []) => {
 	return tokens.filter(token => abusiveWords[token]).length ? true : false;
@@ -31,4 +26,4 @@ const applyScoringStrategy = (languageCode, tokens, cursor, tokenScore) => {
 	return scoringStrategy.apply(tokens, cursor, tokenScore);
 };
 
-module.exports = { removeNeutrals, hasAbusivesContent, getSentimentFactor, applyScoringStrategy };
+module.exports = { hasAbusivesContent, getSentimentFactor, applyScoringStrategy };

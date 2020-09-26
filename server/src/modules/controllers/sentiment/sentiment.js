@@ -34,7 +34,7 @@ const analyse = ({ phrase, opts = {}, languageCode = 'en', callback }) => {
 		score = score + tokenScore;
 
 		calculation.push(tokenScore);
-	}
+    }
 
 	var result = {
 		sentimentScore: score,
