@@ -21,13 +21,13 @@ const ReviewList = styled.div`
 `;
 
 const OPTIONS = [
-  { label: "Most Recent", value: "created_date:asc" },
-  { label: "Most Rated", value: "rating:asc" },
-  { label: "Most Helpful", value: "helpful_count:asc" },
+  { label: "Most Recent", value: "created_date:desc" },
+  { label: "Most Rated", value: "rating:desc" },
+  { label: "Most Helpful", value: "helpful_count:desc" },
 ];
 
 const ReviewsContainer = () => {
-  const [selected, setSelected] = useState(OPTIONS[1].value);
+  const [selected, setSelected] = useState(OPTIONS[0].value);
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(0);
@@ -63,8 +63,15 @@ const ReviewsContainer = () => {
       return;
     }
 
+    const list =
+      page === 0 ? data.body.data.data : [...reviews, ...data.body.data.data];
+
+    setReviews(list);
+    if (list.length === data.body.data.meta.total) {
+      setHasMore(false);
+    }
+
     setTotal(data.body.data.meta.total);
-    setReviews([...reviews, ...data.body.data.data]);
     setLoading(false);
   };
 
@@ -103,7 +110,10 @@ const ReviewsContainer = () => {
 
       <ReviewList>
         {reviews.map((r) => (
-          <ReviewBlock key={r.id} review={r}></ReviewBlock>
+          <ReviewBlock
+            key={`${selected}_${page}_${r.id}`}
+            review={r}
+          ></ReviewBlock>
         ))}
 
         {hasMore && (

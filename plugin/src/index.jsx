@@ -19,7 +19,7 @@ if (process.env.NODE_ENV !== "production") {
   };
   load(document.getElementById("reviews"), {
     userId: "12",
-    productId: "prod1234",
+    productId: "929",
   });
 } else {
   window.RNR = {
