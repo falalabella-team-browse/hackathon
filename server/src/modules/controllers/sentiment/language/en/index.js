@@ -4,7 +4,6 @@ const abusors = require('./abusors.json');
 const exclamators = require('./exclamators.json');
 const invertors = require('./invertors.json');
 
-
 module.exports = {
 	negators,
 	positors,

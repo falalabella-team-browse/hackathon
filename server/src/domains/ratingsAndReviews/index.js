@@ -1,12 +1,7 @@
 const constants = require('../../configs/constants');
 const get = require('lodash/get');
 const moduleController = require('../../modules/controllers');
-
-const defaultSort = {
-	rating: 'desc',
-	created_date: 'desc',
-	helpful_count: 'desc',
-};
+const verifiedPurchase = require('../../configs/verifiedPurchase.json');
 
 const handleResponse = (response, reply) => {
 	if (response && response.error) {
@@ -53,6 +48,8 @@ const postHandler = fastify => async (req, reply) => {
 
 	const sentimentData = moduleController.sentiment().analyse({ phrase: rawComment, languageCode: 'en' });
 
+	const isverifiedPurchase = [...(verifiedPurchase[author] || [])].includes(entityId);
+
 	const reqBody = {
 		entityId,
 		rating,
@@ -61,7 +58,7 @@ const postHandler = fastify => async (req, reply) => {
 		author,
 		created_date: new Date(),
 		modified_date: new Date(),
-		verifiedPurchase: true,
+		verifiedPurchase: isverifiedPurchase,
 		helpful_count: 0,
 		imageLink: [''],
 		sentiment: constants.SENTIMENT_FACTOR[sentimentData.sentimentFactor],
@@ -86,6 +83,7 @@ const postHandler = fastify => async (req, reply) => {
 		description: description,
 		rating: rating,
 		reviewStatus: 'Published',
+		verifiedPurchase: isverifiedPurchase,
 	};
 
 	return reply.code(200).send({
@@ -326,7 +324,7 @@ const searchRatings = fastify => async (req, reply) => {
 		.map(dt => {
 			return { term: { [dt]: { value: filters[dt] } } };
 		});
-	const sortSplit = sort.split('_');
+	const sortSplit = sort.split(':');
 	const sortBy = {
 		[sortSplit[0]]: sortSplit[1],
 	};
@@ -340,7 +338,6 @@ const searchRatings = fastify => async (req, reply) => {
 		},
 		sort: [sortBy],
 	};
-
 	const response = await fastify.restClient.post(url, reqBody, headers);
 
 	if (response && response.error) {
