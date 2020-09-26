@@ -143,7 +143,6 @@ const editHandler = fastify => async (req, reply) => {
 	const reviewStatus = sentimentData.hasAbusiveContent ? 'Abusive' : 'Published';
 
 	const ids = images.map(img => fastify.storage.saveImage(img));
-	console.log('ids', ids);
 
 	const reqBody = {
 		doc: {
