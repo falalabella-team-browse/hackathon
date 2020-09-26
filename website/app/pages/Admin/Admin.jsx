@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import ReactPaginate from 'react-paginate';
+import Pagination from '@material-ui/lab/Pagination';
 import styled from "styled-components";
 import restClients from '../../http/reviews';
 import FullScreenLoader from '../../components/FullScreenLoader';
@@ -180,8 +180,9 @@ const Admin = () => {
 
 
     const setResponse = (response) => {
+        const total = Math.floor(response.body.data.meta.total/10)
         setReviewList(response.body.data.data)
-        setPenCount(response.body.data.meta.total/10)
+        setPenCount(total)
     }
 
     const datafetcher = async (initQuery) => {
@@ -238,11 +239,11 @@ const Admin = () => {
     }
 
     const getEmoji = {
-        1 : <i class="twa twa-pouting-face" title="Dissapointed"></i>,
-        2 : <i class="twa twa-unamused-face" title="Sad"></i>,
-        3 : <i class="twa twa-zipper-mouth" title="Neutral"></i>,
-        4 : <i class="twa twa-smiling-face" title="Happy"></i>,
-        5 : <i class="twa twa-star-struck" title="Excited"></i>,
+        1 : <span class="twa twa-pouting-face" title="Dissapointed"></span>,
+        2 : <span class="twa twa-unamused-face" title="Sad"></span>,
+        3 : <span class="twa twa-zipper-mouth" title="Neutral"></span>,
+        4 : <span class="twa twa-smiling-face" title="Happy"></span>,
+        5 : <span class="twa twa-star-struck" title="Excited"></span>,
     }
 
     const POD = ({review}) => {
@@ -302,8 +303,8 @@ const Admin = () => {
         datafetcher(query);
     }
 
-    const handlePageClick = (e) => {
-        handlePaginationSearch(e.selected)
+    const handlePageClick = (e, page) => {
+        handlePaginationSearch(page - 1)
     }
 
     useEffect(()=>{
@@ -362,17 +363,15 @@ const Admin = () => {
                             ))}
                         </Table>
 
-                        <ReactPaginate
-                            previousLabel={'previous'}
-                            nextLabel={'next'}
-                            breakLabel={'...'}
-                            breakClassName={'break-me'}
-                            pageCount={penCount}
-                            onPageChange={handlePageClick}
-                            containerClassName={'pagination'}
-                            subContainerClassName={'pages pagination'}
-                            activeClassName={'active'}
-                         />
+                       <div style={{marginTop:"20px", display:"flex", justifyContent:"flex-end"}}>
+                           <Pagination 
+                                count={penCount}
+                                variant="outlined"
+                                shape="rounded"
+                                onChange={handlePageClick}
+                                color="primary"
+                            />
+                       </div>
 
                         { loading && <FullScreenLoader /> }
                     </Content>
