@@ -26,11 +26,8 @@ const Button = styled.button`
   border-radius: 5px;
 `;
 
-const ReviewImagePicker = () => {
-  const [images, setImages] = useState([]);
-
+const ReviewImagePicker = ({ images, setImages }) => {
   const onNewImage = (img) => {
-    console.log(img);
     setImages([...images, img]);
   };
 

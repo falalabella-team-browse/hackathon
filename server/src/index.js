@@ -1,6 +1,6 @@
 const fastify = require("fastify");
 const routes = require("./routes");
-const { database } = require("./services");
+const { database, storage } = require("./services");
 const { analyserModule } = require("./modules");
 const config = require("./plugins/config");
 const restClient = require("./plugins/restClients");
@@ -9,6 +9,7 @@ const publicHandler = require("./routes/public");
 const server = fastify({
   logger: true,
   pluginTimeout: 50000,
+  bodyLimit: 15485760,
 });
 
 server.register(require("fastify-jwt"), {
@@ -20,6 +21,7 @@ server.register(require("fastify-cors"), {
   origin: true,
 });
 server.register(database);
+server.register(storage);
 server.register(analyserModule);
 server.register(routes, { prefix: "/api/v1" });
 // should be always at end

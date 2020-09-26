@@ -17,9 +17,16 @@ const safeFetch = async (...props) => {
 };
 
 const addNewReview = async (id, rating, title, author, comment, images) => {
-  return safeFetch(`${getBasePath()}/api/v1/ratingsAndReviews/create`, {
+  return safeFetch(`${getBasePath()}/api/v1/ratingsAndReviews`, {
     method: "POST",
-    body: JSON.stringify({ id, rating, title, description: comment, author }),
+    body: JSON.stringify({
+      entityId: id,
+      rating,
+      title,
+      description: comment,
+      author,
+      images,
+    }),
     headers: {
       "Content-Type": "application/json",
     },
