@@ -38,7 +38,7 @@ const getAllReviewsForEntity = async (entityId, pageNo) => {
 };
 
 const getAllReviews = async (query = "") => {
-    const url = query ?  `${getBasePath()}/api/v1/ratingsAndReviews${query}` : `${getBasePath()}/api/v1/ratingsAndReviews`;
+    const url = query ?  `${getBasePath()}/api/v1/ratingsAndReviews?${query}` : `${getBasePath()}/api/v1/ratingsAndReviews`;
     return safeFetch(url, {
       method: "GET",
       headers: {
