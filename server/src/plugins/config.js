@@ -26,6 +26,10 @@ const schema = {
       type: "string",
       default: "admin",
     },
+    DATA_PATH: {
+      type: "string",
+      default: "/tmp",
+    },
   },
 };
 

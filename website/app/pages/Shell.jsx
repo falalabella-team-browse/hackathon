@@ -45,7 +45,7 @@ const Shell = () => {
 
   return(
     <Switch>
-      <Route path="/" exact>
+      <Route path="/:userId/:productId">
         <ProductLanding />
       </Route>
     </Switch>
