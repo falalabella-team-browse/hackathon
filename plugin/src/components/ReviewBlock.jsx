@@ -83,7 +83,7 @@ const ReviewBlock = ({ review }) => {
     verifiedPurchase,
     rating,
     modified_date,
-  } = review._source;
+  } = review;
 
   const [expanded, setExpanded] = useState(false);
 

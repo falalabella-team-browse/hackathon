@@ -26,14 +26,13 @@ const addNewReview = async (id, rating, title, author, comment, images) => {
   });
 };
 
-const getAllReviews = async (entityId, pageNo) => {
-  return safeFetch(`${getBasePath()}/api/v1/ratingsAndReviews`, {
-    method: "POST",
-    body: JSON.stringify({ pageNo, entityId }),
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+const getAllReviews = async (entityId, pageNo, sort) => {
+  return safeFetch(
+    `${getBasePath()}/api/v1/ratingsAndReviews?entityId=${entityId}&sort=${sort}&reviewStatus=Published&pageNo=${pageNo}`,
+    {
+      method: "GET",
+    }
+  );
 };
 
 const http = {

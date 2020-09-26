@@ -1,5 +1,7 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import restClients from '../../http/reviews';
+import FullScreenLoader from '../../components/FullScreenLoader';
 
 const BodyWrapper = styled.div`
   background-color: #eee;
@@ -64,12 +66,14 @@ const Table = styled.table`
    width : 100%;
 
    tr {
-       padding: 5px;
+       padding: 10px 5px;
+       border-bottom: 1px solid #eee;
    }
 
    td {
       padding: 5px 15px;
       font-size : 12.5px;
+      max-width: 350px;
    }
 `
 
@@ -155,252 +159,80 @@ const Button = styled.button`
    }
 `
 
-const abused = [
-    {
-        "reviewId": "123",
-        "author": "12",
-        "entityId": "prod123",
-        "title": "Good Product",
-        "description": "very satisfied with the quality",
-        "rating": 5,
-        "helpful_count":0,
-        "sentiment_factor":4,
-        "reviewStatus": "Abusive"
-    },
-    {
-        "reviewId": "123",
-        "author": "12",
-        "entityId": "prod123",
-        "title": "Good Product",
-        "description": "very satisfied with the quality",
-        "rating": 5,
-        "helpful_count":0,
-        "sentiment_factor":4,
-        "reviewStatus": "Published"
-    },
-    {
-        "reviewId": "123",
-        "author": "12",
-        "entityId": "sku456",
-        "title": "Bad Really",
-        "description": "very annoyed",
-        "rating": 5,
-        "helpful_count":0,
-        "sentiment_factor": 2,
-        "reviewStatus": "Published"
-    },
-    {
-        "reviewId": "123",
-        "author": "12",
-        "entityId": "prod123",
-        "title": "Good Product",
-        "description": "very satisfied with the quality",
-        "rating": 5,
-        "helpful_count":0,
-        "sentiment_factor":4,
-        "reviewStatus": "Published"
-    },
-    {
-        "reviewId": "123",
-        "author": "12",
-        "entityId": "sku456",
-        "title": "Bad Really",
-        "description": "very annoyed",
-        "rating": 5,
-        "helpful_count":0,
-        "sentiment_factor": -2,
-        "reviewStatus": "Abusive"
-    },
-    {
-        "reviewId": "123",
-        "author": "12",
-        "entityId": "prod123",
-        "title": "Good Product",
-        "description": "very satisfied with the quality",
-        "rating": 5,
-        "helpful_count":0,
-        "sentiment_factor":4,
-        "reviewStatus": "Abusive"
-    },{
-        "reviewId": "123",
-        "author": "12",
-        "entityId": "prod123",
-        "title": "Good Product",
-        "description": "very satisfied with the quality",
-        "rating": 5,
-        "helpful_count":0,
-        "sentiment_factor":4,
-        "reviewStatus": "Abusive"
-    },
-    {
-        "reviewId": "123",
-        "author": "12",
-        "entityId": "prod123",
-        "title": "Good Product",
-        "description": "very satisfied with the quality",
-        "rating": 5,
-        "helpful_count":0,
-        "sentiment_factor":4,
-        "reviewStatus": "Published"
-    },
-    {
-        "reviewId": "123",
-        "author": "12",
-        "entityId": "sku456",
-        "title": "Bad Really",
-        "description": "very annoyed",
-        "rating": 5,
-        "helpful_count":0,
-        "sentiment_factor": 2,
-        "reviewStatus": "Published"
-    },
-    {
-        "reviewId": "123",
-        "author": "12",
-        "entityId": "prod123",
-        "title": "Good Product",
-        "description": "very satisfied with the quality",
-        "rating": 5,
-        "helpful_count":0,
-        "sentiment_factor":4,
-        "reviewStatus": "Published"
-    },
-    {
-        "reviewId": "123",
-        "author": "12",
-        "entityId": "prod123",
-        "title": "Good Product",
-        "description": "very satisfied with the quality",
-        "rating": 5,
-        "helpful_count":0,
-        "sentiment_factor":4,
-        "reviewStatus": "Removed"
-    },
-    {
-        "reviewId": "123",
-        "author": "12",
-        "entityId": "sku456",
-        "title": "Bad Really",
-        "description": "very annoyed",
-        "rating": 5,
-        "helpful_count":0,
-        "sentiment_factor": -2,
-        "reviewStatus": "Removed"
-    },
-    {
-        "reviewId": "123",
-        "author": "12",
-        "entityId": "prod123",
-        "title": "Good Product",
-        "description": "very satisfied with the quality",
-        "rating": 5,
-        "helpful_count":0,
-        "sentiment_factor":4,
-        "reviewStatus": "Removed"
-    },{
-        "reviewId": "123",
-        "author": "12",
-        "entityId": "prod123",
-        "title": "Good Product",
-        "description": "very satisfied with the quality",
-        "rating": 5,
-        "helpful_count":0,
-        "sentiment_factor":4,
-        "reviewStatus": "Removed"
-    },
-    {
-        "reviewId": "123",
-        "author": "12",
-        "entityId": "prod123",
-        "title": "Good Product",
-        "description": "very satisfied with the quality",
-        "rating": 5,
-        "helpful_count":0,
-        "sentiment_factor":4,
-        "reviewStatus": "Published"
-    },
-    {
-        "reviewId": "123",
-        "author": "12",
-        "entityId": "sku456",
-        "title": "Bad Really",
-        "description": "very annoyed",
-        "rating": 5,
-        "helpful_count":0,
-        "sentiment_factor": 2,
-        "reviewStatus": "Published"
-    },
-    {
-        "reviewId": "123",
-        "author": "12",
-        "entityId": "prod123",
-        "title": "Good Product",
-        "description": "very satisfied with the quality",
-        "rating": 5,
-        "helpful_count":0,
-        "sentiment_factor":4,
-        "reviewStatus": "Published"
-    },{
-        "reviewId": "123",
-        "author": "12",
-        "entityId": "prod123",
-        "title": "Good Product",
-        "description": "very satisfied with the quality",
-        "rating": 5,
-        "helpful_count":0,
-        "sentiment_factor":4,
-        "reviewStatus": "Published"
-    }
-]
-
-const ReviewStatus = ({status}) => {
-    if(status === 'Abusive'){
-        return <DangerText>{status}</DangerText>
-    }
-    return status;
-}
-
-const EditReviewButtons = ({review}) => {
-    if(review.reviewStatus === 'Abusive') {
-        return(
-            <FlexWrapper>
-                <Button className="danger"> Remove </Button>
-                <Button className="success"> Publish </Button>
-            </FlexWrapper>
-        )
-    }
-
-    if(review.reviewStatus === 'Removed') {
-        return(
-            <FlexWrapper>
-                <Button className="success"> Publish </Button>
-            </FlexWrapper>
-        )
-    }
-
-    return(
-        <FlexWrapper>
-            <Button className="danger"> Remove </Button>
-            <Button className="warning"> Abusive </Button>
-        </FlexWrapper>
-    )
-}
-
-
-const POD = ({review}) => {
-    return (
-        <tr>
-            <td>{review.entityId}</td>
-            <td>{review.title}</td>
-            <td>{review.description}</td>
-            <td>{review.sentiment_factor}</td>
-            <td><ReviewStatus status={review.reviewStatus}></ReviewStatus></td>
-            <td><EditReviewButtons review={review}></EditReviewButtons></td>
-        </tr>
-    )
-}
 
 const Admin = () => {
+
+    const [ loading, setLoading] = useState(false);
+    const [ reviewsList , getReviewList] = useState([]);
+
+    const datafetcher = async () => {
+        setLoading(true);
+        const response = await restClients.getAllReviews();
+        response.success ? getReviewList(response.body.data.data) : getReviewList([]);
+        setLoading(false);
+        return;
+    }
+
+    useEffect(()=>{
+       datafetcher();
+    }, [])
+
+
+    const ReviewStatus = ({status}) => {
+        if(status === 'Abusive'){
+            return <DangerText>{status}</DangerText>
+        }
+        return status;
+    }
+
+
+    const updateReview = async (reviewId, status) => {
+        setLoading(true);
+        const response = await restClients.updateStatus(reviewId, status);
+        setLoading(false);
+        return response;
+    }
+    
+    const EditReviewButtons = ({review}) => {
+        const { reviewId } = review;
+        if(review.reviewStatus === 'Abusive') {
+            return(
+                <FlexWrapper>
+                    <Button className="danger" onClick={() => updateReview(reviewId, 'Removed')}> Remove </Button>
+                    <Button className="success" onClick={() => updateReview(reviewId, 'Published')}> Publish </Button>
+                </FlexWrapper>
+            )
+        }
+    
+        if(review.reviewStatus === 'Removed') {
+            return(
+                <FlexWrapper>
+                    <Button className="success" onClick={() => updateReview(reviewId, 'Published')}> Publish </Button>
+                </FlexWrapper>
+            )
+        }
+    
+        return(
+            <FlexWrapper>
+                <Button className="danger" onClick={() => updateReview(reviewId, 'Removed')}> Remove </Button>
+                <Button className="warning" onClick={() => updateReview(reviewId, 'Abusive')}> Abusive </Button>
+            </FlexWrapper>
+        )
+    }
+
+    const POD = ({review}) => {
+        return (
+            <tr>
+                <td>{review.entityId}</td>
+                <td>{review.title}</td>
+                <td>{review.description}</td>
+                <td>{review.sentiment_factor}</td>
+                <td><ReviewStatus status={review.reviewStatus}></ReviewStatus></td>
+                <td><EditReviewButtons review={review}></EditReviewButtons></td>
+            </tr>
+        )
+    }
+
     return(
         <BodyWrapper>
             <Container>
@@ -444,10 +276,12 @@ const Admin = () => {
                              <th><Title> Status </Title></th>
                              <th><Title> Update </Title></th>
                             </tr>
-                            {abused.map((item)=>(
+                            {reviewsList.map((item)=>(
                                 <POD review={item} />
                             ))}
                         </Table>
+
+                        { loading && <FullScreenLoader /> }
                     </Content>
                 </ContentWrapper>
             </Container>
