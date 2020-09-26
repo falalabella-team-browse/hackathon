@@ -38,6 +38,7 @@ const CloseButton = styled.button`
   outline: none;
   padding: 15px;
   cursor: pointer;
+  z-index: 10;
 `;
 
 const ImageContainer = styled.div`

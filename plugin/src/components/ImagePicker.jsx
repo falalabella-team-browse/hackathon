@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { ImagePicker } from "react-file-picker";
 import Camera from "./Camera";
+import http from "../http";
 
 const Container = styled.div`
   display: flex;
@@ -31,10 +32,18 @@ const ReviewImagePicker = ({ images, setImages }) => {
     setImages([...images, img]);
   };
 
+  const getImageSrc = (src) => {
+    if (src.indexOf("data") === 0) {
+      return src;
+    }
+
+    return http.getImageUrls([src])[0];
+  };
+
   return (
     <Container>
       {images.map((img) => (
-        <Image src={img} key={img.substr(0, 100)}></Image>
+        <Image src={getImageSrc(img)} key={img.substr(0, 100)}></Image>
       ))}
 
       {images.length < 5 && (

@@ -64,12 +64,34 @@ const getImageUrls = (ids) => {
   return ids.map((id) => `${getBasePath()}/api/v1/image?id=${id}`);
 };
 
+const deleteReview = (reviewId) => {
+  return safeFetch(`${getBasePath()}/api/v1/ratingsAndReviews/updateStatus`, {
+    method: "POST",
+    body: JSON.stringify({ reviewId, status: "Removed" }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+};
+
+const updateReview = (id, rating, title, description, images) => {
+  return safeFetch(`${getBasePath()}/api/v1/ratingsAndReviews/edit`, {
+    method: "POST",
+    body: JSON.stringify({ id, rating, title, description, images }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+};
+
 const http = {
   increamenHelpfulCount,
   addNewReview,
   getAllReviews,
   getAggregatedDetails,
   getImageUrls,
+  deleteReview,
+  updateReview,
 };
 
 export default http;

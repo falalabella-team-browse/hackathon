@@ -77,27 +77,34 @@ const ReviewsContainer = ({ counter }) => {
     setLoading(false);
   };
 
+  const reset = () => {
+    if (page === 0) {
+      if (loading) {
+        return;
+      }
+
+      loadReviews();
+    } else {
+      setPage(0);
+    }
+  };
+
   useEffect(() => {
+    if (loading) {
+      return;
+    }
+
     loadReviews();
   }, [page]);
 
   useEffect(() => {
     setReviews([]);
     setHasMore(true);
-
-    if (page === 0) {
-      loadReviews();
-    } else {
-      setPage(0);
-    }
+    reset();
   }, [selected]);
 
   useEffect(() => {
-    if (page === 0) {
-      loadReviews();
-    } else {
-      setPage(0);
-    }
+    reset();
   }, [counter]);
 
   const handleLoadMore = () => {
@@ -123,6 +130,7 @@ const ReviewsContainer = ({ counter }) => {
           <ReviewBlock
             key={`${selected}_${page}_${r.id}`}
             review={r}
+            onChange={reset}
           ></ReviewBlock>
         ))}
 
