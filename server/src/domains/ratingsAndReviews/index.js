@@ -11,6 +11,7 @@ const {
 	aggregator_Histogram
 } = require('./helper');
 var tokenize = require('../../modules/controllers/sentiment/tokenize');
+const apiSchemas = require('./schema');
 
 const handleResponse = (response, reply) => {
 	if (response && response.error) {
@@ -220,7 +221,17 @@ const updateStatus = fastify => async (req, reply) => {
 
 	const response = await fastify.restClient.post(url, reqBody, headers);
 
-	handleResponse(response, reply);
+	if (response && response.error) {
+		reply.code(response.status || 500).send({
+			error: response.error,
+		});
+		return;
+	}
+
+	return reply.code(200).send({
+		success : true,
+		msg : "updated successfully"
+	});
 };
 
 const markHelpFul = fastify => async (req, reply) => {
@@ -248,7 +259,17 @@ const markHelpFul = fastify => async (req, reply) => {
 
 	const response = await fastify.restClient.post(url, reqBody, headers);
 
-	handleResponse(response, reply);
+	if (response && response.error) {
+		reply.code(response.status || 500).send({
+			error: response.error,
+		});
+		return;
+	}
+
+	return reply.code(200).send({
+		success : true,
+		msg : "updated successfully"
+	});
 };
 
 const averageRatings = (fastify, method = 'average') => async (req, reply) => {
@@ -451,12 +472,12 @@ const searchRatings = fastify => async (req, reply) => {
 };
 
 module.exports = async fastify => {
+	fastify.post('/ratingsAndReviews', apiSchemas.createReviewSchema , postHandler(fastify));
+	fastify.post('/ratingsAndReviews/flag', apiSchemas.flagReviewSchema, markHelpFul(fastify));
+	fastify.post('/ratingsAndReviews/edit', apiSchemas.editReviewSchema,  editHandler(fastify));
+	fastify.post('/ratingsAndReviews/updateStatus', apiSchemas.updateReviewSchema, updateStatus(fastify));
 	fastify.get('/ratingsAndReviews', searchRatings(fastify));
-	fastify.post('/ratingsAndReviews', postHandler(fastify));
-	fastify.post('/ratingsAndReviews/flag', markHelpFul(fastify));
-	fastify.post('/ratingsAndReviews/edit', editHandler(fastify));
 	fastify.get('/ratingsAndReviews/:id', getHandler(fastify));
-	fastify.post('/ratingsAndReviews/updateStatus', updateStatus(fastify));
 	fastify.get('/averageRatings/:id', averageRatings(fastify, 'average'));
 	fastify.get('/analytics/:id', averageRatings(fastify, 'analytics'));
 	fastify.get('/histogram/:id', histogram(fastify));

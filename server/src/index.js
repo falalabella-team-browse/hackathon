@@ -5,6 +5,8 @@ const { analyserModule } = require("./modules");
 const config = require("./plugins/config");
 const restClient = require("./plugins/restClients");
 const publicHandler = require("./routes/public");
+const fastifySwagger = require("fastify-swagger");
+const swagger = require('./swagger');
 
 const server = fastify({
   logger: true,
@@ -17,6 +19,7 @@ server.register(restClient);
 server.register(require("fastify-cors"), {
   origin: true,
 });
+server.register(require('fastify-swagger'), swagger.options);
 server.register(storage);
 server.register(analyserModule);
 server.register(routes, { prefix: "/api/v1" });
