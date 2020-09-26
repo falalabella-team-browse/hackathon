@@ -163,7 +163,7 @@ const Button = styled.button`
 const Admin = () => {
 
     const [ loading, setLoading] = useState(false);
-    const [ reviewsList , getReviewList] = useState([]);
+    const [ reviewsList , setReviewList] = useState([]);
     const [ reviewStatus , setReviewStatus] = useState('Abusive');
     const [ reviewSortBy , setReviewSortBy] = useState('');
     const [ entity , setEntity] = useState('');
@@ -177,7 +177,7 @@ const Admin = () => {
     const datafetcher = async (initQuery) => {
         setLoading(true);
         const response = await restClients.getAllReviews(initQuery);
-        response.success ? getReviewList(response.body.data.data) : getReviewList([]);
+        response.success ? setReviewList(response.body.data.data) : setReviewList([]);
         setLoading(false);
         return;
     }
@@ -199,6 +199,8 @@ const Admin = () => {
     const updateReview = async (reviewId, status) => {
         setLoading(true);
         const response = await restClients.updateStatus(reviewId, status);
+        const filteredData = await reviewsList.filter((item) => item.id !== reviewId);
+        setReviewList(filteredData);
         setLoading(false);
         return response;
     }
@@ -244,7 +246,7 @@ const Admin = () => {
     }
 
     const statusChangeHandler = (e) => {
-        setReviewStatus(e.target.value)
+        e.target.value && setReviewStatus(e.target.value)
     }
 
     const sortByChangeHandler = (e) => {
@@ -258,13 +260,13 @@ const Admin = () => {
     const handleSearch = () => {
         let query = ''
         if(reviewStatus){
-            query=`reviewStatus=${reviewStatus}&`
+            query= query.concat(`reviewStatus=${reviewStatus}&`)
         }
         if(reviewSortBy){
-            query=`sort=${reviewSortBy}&`
+            query= query.concat(`sort=${reviewSortBy}&`)
         }
         if(entity){
-            query=`entityId=${entity}`
+            query= query.concat(`entityId=${entity}`)
         }
         datafetcher(query);
     }

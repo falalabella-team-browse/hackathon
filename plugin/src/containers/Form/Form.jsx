@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { FilledButton } from "../../components/Button";
 import CircularLoader from "../../components/CircluarLoader";
 import Close from "../../components/Close";
+import DoneIcon from "../../components/DoneIcon";
 import ErrorIcon from "../../components/ErrorIcon";
 import Heading from "../../components/Heading";
 import ImagePicker from "../../components/ImagePicker";
@@ -61,6 +62,7 @@ const VIEW_LOADING = "Loading";
 const VIEW_ERROR = "Error";
 const VIEW_BLOCKED = "Blocked";
 const VIEW_LOADED = "Loaded";
+const VIEW_SUCCESS = "Success";
 
 const ReviewForm = ({ onClose }) => {
   const [view, setView] = useState(VIEW_LOADED);
@@ -117,7 +119,7 @@ const ReviewForm = ({ onClose }) => {
         if (!res.success) {
           setView(VIEW_ERROR);
         } else if (res.success && res.body.reviewStatus === "Published") {
-          onClose();
+          setView(VIEW_SUCCESS);
         } else {
           setView(VIEW_BLOCKED);
         }
@@ -150,6 +152,16 @@ const ReviewForm = ({ onClose }) => {
           </ModalCloseButton>
           <ErrorIcon />
           <STATUS_TEXT>Something went wrong! Try Again Later</STATUS_TEXT>
+        </STATUS_CONTAINER>
+      );
+    case VIEW_SUCCESS:
+      return (
+        <STATUS_CONTAINER>
+          <ModalCloseButton onClick={onClose}>
+            <Close />
+          </ModalCloseButton>
+          <DoneIcon />
+          <STATUS_TEXT>Thanks for your review</STATUS_TEXT>
         </STATUS_CONTAINER>
       );
     case VIEW_BLOCKED:

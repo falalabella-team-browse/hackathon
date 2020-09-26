@@ -54,10 +54,17 @@ const increamenHelpfulCount = async body => {
 	});
 };
 
+const getAggregatedDetails = async entityId => {
+	return safeFetch(`${getBasePath()}/api/v1/averageRatings/${entityId}`, {
+		method: 'GET',
+	});
+};
+
 const http = {
 	addNewReview,
 	getAllReviews,
 	increamenHelpfulCount,
+	getAggregatedDetails,
 };
 
 export default http;

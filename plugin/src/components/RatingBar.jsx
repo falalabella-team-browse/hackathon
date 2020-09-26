@@ -17,6 +17,7 @@ const Bar = styled.div`
   background-color: #e7e7e7;
   height: 8px;
   position: relative;
+  transition: 0.3s all linear;
   &:after {
     position: absolute;
     content: " ";
@@ -34,39 +35,21 @@ const Value = styled.span`
   margin-left: 12px;
 `;
 
-const RatingBar = () => {
-  const data = [
-    {
-      name: "Excellent",
-      value: 20,
-      color: "#4aa54a",
-      count: 100,
-    },
-    {
-      name: "Good",
-      value: 40,
-      color: "#a5d72f",
-      count: 20,
-    },
-    {
-      name: "Average",
-      value: 10,
-      color: "#f7e731",
-      count: 78,
-    },
-    {
-      name: "Below Average",
-      value: 20,
-      color: "#f7a521",
-      count: 20,
-    },
-    {
-      name: "Poor",
-      value: 10,
-      color: "#ee3b11",
-      count: 1,
-    },
-  ];
+const LABELS = ["Poor", "Below Average", "Average", "Good", "Excellent"];
+
+const COLORS = ["#ee3b11", "#f7a521", "#f7e731", "#a5d72f", "#4aa54a"];
+
+const RatingBar = ({ ratings, totalRating }) => {
+  const getValue = (i) => {
+    return {
+      value: totalRating ? Math.floor((ratings[i + 1] * 100) / totalRating) : 0,
+      count: ratings[i + 1],
+      name: LABELS[i],
+      color: COLORS[i],
+    };
+  };
+
+  const data = LABELS.map((_, i) => getValue(i)).reverse();
 
   return (
     <Container>

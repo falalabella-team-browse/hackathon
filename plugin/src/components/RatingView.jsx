@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Star, { VIEW_FULL, VIEW_HALF, VIEW_EMPTY } from "./Star";
 
@@ -32,6 +32,10 @@ const RatingView = ({ rating, size, editable = false, onChange, gap = 0 }) => {
       onChange(i);
     }
   };
+
+  useEffect(() => {
+    setViews(getViews(rating));
+  }, [rating]);
 
   return (
     <Container editable={editable}>
