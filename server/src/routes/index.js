@@ -1,6 +1,7 @@
 const analyserRoutes = require("./analyser");
 const ratingsAndReviews = require("../domains/ratingsAndReviews");
 const { createReadStream } = require("fs");
+const { imageSchema } = require('./schema/sentimentAnalyser');
 
 const routes = async (fastify, opt, next) => {
   fastify.get("/", (_, res) => {
@@ -10,7 +11,7 @@ const routes = async (fastify, opt, next) => {
     });
   });
 
-  fastify.get("/image", (req, res) => {
+  fastify.get("/image", imageSchema, (req, res) => {
     const { id } = req.query;
     const path = fastify.storage.getImage(id);
 
