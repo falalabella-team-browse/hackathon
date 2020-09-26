@@ -21,20 +21,26 @@ const ReviewList = styled.div`
 `;
 
 const OPTIONS = [
-  { label: "Most Recent", value: "recent" },
-  { label: "Most Helpful", value: "helpful" },
+  { label: "Most Recent", value: "created_date_asc" },
+  { label: "Most Rated", value: "rating_asc" },
+  { label: "Most Helpful", value: "helpful_count_asc" },
 ];
 
 const ReviewsContainer = () => {
-  const [selected, setSelected] = useState(OPTIONS[0].value);
+  const [selected, setSelected] = useState(OPTIONS[1].value);
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
+  const [total, setTotal] = useState(0);
 
   const user = useUser();
 
   const handleOptionChange = (val) => {
+    if (loading) {
+      return;
+    }
+
     setSelected(val);
   };
 
@@ -45,20 +51,37 @@ const ReviewsContainer = () => {
 
     setLoading(true);
 
-    const data = await http.getAllReviews(user.productId, page);
+    const data = await http.getAllReviews(user.productId, page, selected);
 
-    if (!data.success || data.body.data.hits.hits.length === 0) {
+    if (
+      !data.success ||
+      !Array.isArray(data.body.data.data) ||
+      data.body.data.data.length === 0
+    ) {
+      setLoading(false);
       setHasMore(false);
       return;
     }
 
-    setReviews([...reviews, ...data.body.data.hits.hits]);
+    setTotal(data.body.data.meta.total);
+    setReviews([...reviews, ...data.body.data.data]);
     setLoading(false);
   };
 
   useEffect(() => {
     loadReviews();
   }, [page]);
+
+  useEffect(() => {
+    setReviews([]);
+    setHasMore(true);
+
+    if (page === 0) {
+      loadReviews();
+    } else {
+      setPage(0);
+    }
+  }, [selected]);
 
   const handleLoadMore = () => {
     if (loading || !hasMore) {
@@ -70,7 +93,7 @@ const ReviewsContainer = () => {
 
   return (
     <Container>
-      <Heading>Reviews (18)</Heading>
+      <Heading>Reviews ({total})</Heading>
 
       <Dropdown
         options={OPTIONS}
@@ -80,7 +103,7 @@ const ReviewsContainer = () => {
 
       <ReviewList>
         {reviews.map((r) => (
-          <ReviewBlock key={r._id} review={r}></ReviewBlock>
+          <ReviewBlock key={r.id} review={r}></ReviewBlock>
         ))}
 
         {hasMore && (
