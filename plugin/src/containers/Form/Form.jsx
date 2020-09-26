@@ -64,7 +64,7 @@ const VIEW_BLOCKED = "Blocked";
 const VIEW_LOADED = "Loaded";
 const VIEW_SUCCESS = "Success";
 
-const ReviewForm = ({ onClose }) => {
+const ReviewForm = ({ onClose, onChange }) => {
   const [view, setView] = useState(VIEW_LOADED);
   const [error, setError] = useState("");
   const [images, setImages] = useState([]);
@@ -115,11 +115,11 @@ const ReviewForm = ({ onClose }) => {
         images
       )
       .then((res) => {
-        console.log(res);
         if (!res.success) {
           setView(VIEW_ERROR);
         } else if (res.success && res.body.reviewStatus === "Published") {
           setView(VIEW_SUCCESS);
+          onChange();
         } else {
           setView(VIEW_BLOCKED);
         }
