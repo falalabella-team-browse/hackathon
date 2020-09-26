@@ -4,4 +4,6 @@ services:
     build: .
     ports:
       - "80:3000"
+    volumes:
+      - ./data:/tmp
     restart: always

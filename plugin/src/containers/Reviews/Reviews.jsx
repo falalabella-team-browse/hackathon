@@ -21,12 +21,14 @@ const ReviewList = styled.div`
 `;
 
 const OPTIONS = [
+  { label: "Most Relevant", value: "review_score:desc" },
   { label: "Most Recent", value: "created_date:desc" },
   { label: "Most Rated", value: "rating:desc" },
+  { label: "Least Rated", value: "rating:asc" },
   { label: "Most Helpful", value: "helpful_count:desc" },
 ];
 
-const ReviewsContainer = () => {
+const ReviewsContainer = ({ counter }) => {
   const [selected, setSelected] = useState(OPTIONS[0].value);
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -89,6 +91,14 @@ const ReviewsContainer = () => {
       setPage(0);
     }
   }, [selected]);
+
+  useEffect(() => {
+    if (page === 0) {
+      loadReviews();
+    } else {
+      setPage(0);
+    }
+  }, [counter]);
 
   const handleLoadMore = () => {
     if (loading || !hasMore) {

@@ -40,6 +40,7 @@ const AppShell = () => {
     ratings: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 },
     totalRating: 0,
   });
+  const [counter, setCounter] = useState(1);
 
   const handleCreateModal = () => {
     setShowModal(true);
@@ -49,8 +50,6 @@ const AppShell = () => {
 
   const loadData = async () => {
     const data = await http.getAggregatedDetails(user.productId);
-
-    console.log(data);
 
     if (data.success) {
       const { averageRating, totalNumberOfReviews, rating_buckets } = data.body;
@@ -71,6 +70,11 @@ const AppShell = () => {
         totalRating,
       });
     }
+  };
+
+  const refreshContent = () => {
+    loadData();
+    setCounter(counter + 1);
   };
 
   useEffect(() => {
@@ -96,7 +100,7 @@ const AppShell = () => {
           ratings={data.ratings}
           totalRating={data.totalRating}
         ></ReviewFilterContainer>
-        <ReviewsContainer></ReviewsContainer>
+        <ReviewsContainer counter={counter}></ReviewsContainer>
       </ContentContainer>
 
       {showModal && (
@@ -105,6 +109,7 @@ const AppShell = () => {
             onClose={() => {
               setShowModal(false);
             }}
+            onChange={refreshContent}
           />
         </Modal>
       )}
