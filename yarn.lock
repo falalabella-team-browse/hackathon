@@ -5516,7 +5516,7 @@ prop-types-extra@^1.1.0:
     react-is "^16.3.2"
     warning "^4.0.0"
 
-prop-types@^15.6.2, prop-types@^15.7.2:
+prop-types@^15.6.1, prop-types@^15.6.2, prop-types@^15.7.2:
   version "15.7.2"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.7.2.tgz#52c41e75b8c87e72b9d9360e0206b99dcbffa6c5"
   integrity sha512-8QQikdH7//R2vurIJSutZ1smHYTcLpRWEOlHnzcWHmBYrOGUysKwSsrC89BCiFj3CbrfJ/nXFdJepOVrY1GCHQ==
@@ -5733,6 +5733,13 @@ react-overlays@^4.1.0:
     prop-types "^15.7.2"
     uncontrollable "^7.0.0"
     warning "^4.0.3"
+
+react-paginate@^6.5.0:
+  version "6.5.0"
+  resolved "https://registry.yarnpkg.com/react-paginate/-/react-paginate-6.5.0.tgz#b9baf53627b115cfd688afa048776aa45bffda19"
+  integrity sha512-H7xSi9jyiJzgfaj+2nNhQcjZfwzJ/Mxb64V2RiyDctjZyCWojwsaGwMqhLBpQ58iAuMVtBMRQ7ECqMcUKG9QSQ==
+  dependencies:
+    prop-types "^15.6.1"
 
 react-router-dom@^5.2.0:
   version "5.2.0"
@@ -6817,6 +6824,11 @@ tweetnacl@^0.14.3, tweetnacl@~0.14.0:
   version "0.14.5"
   resolved "https://registry.yarnpkg.com/tweetnacl/-/tweetnacl-0.14.5.tgz#5ae68177f192d4456269d108afa93ff8743f4f64"
   integrity sha1-WuaBd/GS1EViadEIr6k/+HQ/T2Q=
+
+twemoji-awesome@^1.0.6:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/twemoji-awesome/-/twemoji-awesome-1.0.6.tgz#3167c3abb95753da997291f8f1c53cbac61852a5"
+  integrity sha1-MWfDq7lXU9qZcpH48cU8usYYUqU=
 
 type-check@~0.3.2:
   version "0.3.2"

@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
+import ReactPaginate from 'react-paginate';
 import styled from "styled-components";
 import restClients from '../../http/reviews';
 import FullScreenLoader from '../../components/FullScreenLoader';
+import './emoji.css';
 
 const BodyWrapper = styled.div`
   background-color: #eee;
@@ -12,6 +14,7 @@ const Container = styled.div`
   margin: 0 auto;
   max-width: 1280px;
   width: 100%;
+  font-size: 14px;
 `;
 
 const ContentWrapper = styled.div`
@@ -165,27 +168,29 @@ const Admin = () => {
     const [ loading, setLoading] = useState(false);
     const [ reviewsList , setReviewList] = useState([]);
     const [ reviewStatus , setReviewStatus] = useState('Abusive');
-    const [ reviewSortBy , setReviewSortBy] = useState('');
+    const [ reviewSortBy , setReviewSortBy] = useState('created_date:desc');
     const [ entity , setEntity] = useState('');
+    const [ penCount , setPenCount] = useState(0);
 
     const sortOptions = [
-        { label: "Most Recent", value: "created_date:asc" },
-        { label: "Most Rated", value: "rating:asc" },
-        { label: "Most Helpful", value: "helpful_count:asc" },
+        { label: "Most Recent", value: "created_date:desc" },
+        { label: "Most Rated", value: "rating:desc" },
+        { label: "Most Helpful", value: "helpful_count:desc" },
     ];
+
+
+    const setResponse = (response) => {
+        setReviewList(response.body.data.data)
+        setPenCount(response.body.data.meta.total/10)
+    }
 
     const datafetcher = async (initQuery) => {
         setLoading(true);
         const response = await restClients.getAllReviews(initQuery);
-        response.success ? setReviewList(response.body.data.data) : setReviewList([]);
+        response.success ? setResponse(response) : setReviewList([]);
         setLoading(false);
         return;
     }
-
-    useEffect(()=>{
-       const initQuery = 'reviewStatus=Abusive';
-       datafetcher(initQuery);
-    }, [])
 
 
     const ReviewStatus = ({status}) => {
@@ -232,13 +237,22 @@ const Admin = () => {
         )
     }
 
+    const getEmoji = {
+        1 : <i class="twa twa-pouting-face" title="Dissapointed"></i>,
+        2 : <i class="twa twa-unamused-face" title="Sad"></i>,
+        3 : <i class="twa twa-zipper-mouth" title="Neutral"></i>,
+        4 : <i class="twa twa-smiling-face" title="Happy"></i>,
+        5 : <i class="twa twa-star-struck" title="Excited"></i>,
+    }
+
     const POD = ({review}) => {
         return (
             <tr>
                 <td>{review.entityId}</td>
                 <td>{review.title}</td>
                 <td>{review.description}</td>
-                <td>{review.sentiment_factor}</td>
+                <td>{review.author}</td>
+                <td>{getEmoji[review.sentiment]}</td>
                 <td><ReviewStatus status={review.reviewStatus}></ReviewStatus></td>
                 <td><EditReviewButtons review={review}></EditReviewButtons></td>
             </tr>
@@ -269,6 +283,27 @@ const Admin = () => {
             query= query.concat(`entityId=${entity}`)
         }
         datafetcher(query);
+    }
+
+    const handlePaginationSearch = (page) => {
+        let query = ''
+        if(reviewStatus){
+            query= query.concat(`reviewStatus=${reviewStatus}&`)
+        }
+        if(reviewSortBy){
+            query= query.concat(`sort=${reviewSortBy}&`)
+        }
+        if(entity){
+            query= query.concat(`entityId=${entity}`)
+        }
+        if(page){
+            query= query.concat(`pageNo=${page}`)
+        }
+        datafetcher(query);
+    }
+
+    const handlePageClick = (e) => {
+        handlePaginationSearch(e.selected)
     }
 
     useEffect(()=>{
@@ -317,6 +352,7 @@ const Admin = () => {
                              <th><Title> Entity </Title></th>
                              <th><Title> Title </Title></th>
                              <th><Title> Description </Title></th>
+                             <th><Title>Author</Title></th>
                              <th><Title> Sentiment </Title></th>
                              <th><Title> Status </Title></th>
                              <th><Title> Update </Title></th>
@@ -325,6 +361,18 @@ const Admin = () => {
                                 <POD review={item} />
                             ))}
                         </Table>
+
+                        <ReactPaginate
+                            previousLabel={'previous'}
+                            nextLabel={'next'}
+                            breakLabel={'...'}
+                            breakClassName={'break-me'}
+                            pageCount={penCount}
+                            onPageChange={handlePageClick}
+                            containerClassName={'pagination'}
+                            subContainerClassName={'pages pagination'}
+                            activeClassName={'active'}
+                         />
 
                         { loading && <FullScreenLoader /> }
                     </Content>
