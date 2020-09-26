@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { FilledButton } from "../../components/Button";
 import CircularLoader from "../../components/CircluarLoader";
 import Dropdown from "../../components/Dropdown";
+import Pagination from "../../components/Pagination";
 import ReviewBlock from "../../components/ReviewBlock";
 import { useUser } from "../../Context/UserContext";
 import http from "../../http";
@@ -20,6 +21,10 @@ const ReviewList = styled.div`
   margin-top: 15px;
 `;
 
+const LoadingContainer = styled.div`
+  text-align: center;
+`;
+
 const OPTIONS = [
   { label: "Relevant", value: "review_score:desc" },
   { label: "Recent", value: "created_date:desc" },
@@ -29,64 +34,37 @@ const OPTIONS = [
 ];
 
 const ReviewsContainer = ({ counter }) => {
+  const [page, setPage] = useState(0);
   const [selected, setSelected] = useState(OPTIONS[0].value);
   const [reviews, setReviews] = useState([]);
-
-  const loading = useRef();
-
-  const [page, setPage] = useState(0);
-  const [hasMore, setHasMore] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [total, setTotal] = useState(0);
 
   const user = useUser();
 
   const handleOptionChange = (val) => {
-    if (loading.current) {
-      return;
-    }
-
     setSelected(val);
   };
 
   const loadReviews = async () => {
-    if (loading.current || !hasMore) {
-      return;
-    }
-
-    loading.current = true;
-
+    setLoading(true);
     const data = await http.getAllReviews(user.productId, page, selected);
+    setLoading(false);
 
     if (
       !data.success ||
       !Array.isArray(data.body.data.data) ||
       data.body.data.data.length === 0
     ) {
-      loading.current = false;
-      setHasMore(false);
       return;
     }
 
-    const list =
-      page === 0 ? data.body.data.data : [...reviews, ...data.body.data.data];
-
-    setReviews(list);
-    if (list.length === data.body.data.meta.total) {
-      setHasMore(false);
-    }
-
-    console.log("done");
+    setReviews(data.body.data.data);
     setTotal(data.body.data.meta.total);
-
-    loading.current = false;
   };
 
   const reset = () => {
     if (page === 0) {
-      if (loading.current) {
-        return;
-      }
-
       loadReviews();
     } else {
       setPage(0);
@@ -94,30 +72,12 @@ const ReviewsContainer = ({ counter }) => {
   };
 
   useEffect(() => {
-    if (loading.current) {
-      return;
-    }
-
     loadReviews();
   }, [page]);
 
   useEffect(() => {
-    setReviews([]);
-    setHasMore(true);
     reset();
-  }, [selected]);
-
-  useEffect(() => {
-    reset();
-  }, [counter]);
-
-  const handleLoadMore = () => {
-    if (loading.current || !hasMore) {
-      return;
-    }
-
-    setPage(page + 1);
-  };
+  }, [selected, counter]);
 
   return (
     <Container>
@@ -138,15 +98,22 @@ const ReviewsContainer = ({ counter }) => {
           ></ReviewBlock>
         ))}
 
-        {hasMore && (
-          <FilledButton onClick={handleLoadMore}>
-            {loading.current ? (
-              <CircularLoader size="18px" color="white" />
-            ) : (
-              "Load More"
-            )}
-          </FilledButton>
+        {loading && (
+          <LoadingContainer>
+            <CircularLoader />
+          </LoadingContainer>
         )}
+
+        <Pagination
+          currentPage={page + 1}
+          onChange={(page) => {
+            if (!loading) {
+              setPage(page - 1);
+            }
+          }}
+          totalResults={total}
+          resultsPerPage={10}
+        />
       </ReviewList>
     </Container>
   );
