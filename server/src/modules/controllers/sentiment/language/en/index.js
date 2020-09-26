@@ -8,13 +8,13 @@ const invertors = require('./invertors.json');
 
 // const ntext = fs
 // 	.readFileSync(
-// 		'/Users/veereshnete/Veer/hackathon/hackathon/server/src/modules/controllers/sentiment/language/en/data1.txt'
+// 		'/Users/veereshnete/Veer/hackathon/hackathon/server/src/modules/controllers/sentiment/language/en/negative.txt'
 // 	)
 // 	.toString();
 
 // const ptext = fs
 // 	.readFileSync(
-// 		'/Users/veereshnete/Veer/hackathon/hackathon/server/src/modules/controllers/sentiment/language/en/data2.txt'
+// 		'/Users/veereshnete/Veer/hackathon/hackathon/server/src/modules/controllers/sentiment/language/en/positive.txt'
 // 	)
 // 	.toString();
 
@@ -34,8 +34,8 @@ const invertors = require('./invertors.json');
 // const positive = {};
 // const negative = {};
 // for (let key in data) {
-// 	if (data[key] > 0) positive[key] = data[key];
-// 	else negative[key] = data[key];
+// 	if (data[key] > 0) positive[key] = 1;
+// 	else negative[key] = -1;
 // }
 
 // const nwords = { ...nObj, ...negative };

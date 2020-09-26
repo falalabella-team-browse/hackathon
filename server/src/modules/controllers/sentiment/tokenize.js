@@ -1,7 +1,7 @@
 const language = require('./language');
 
 const tokenize = (input, languageCode = 'en') => {
-	const { positors, negators, abusors, exclamators } = language[languageCode];
+	const { positors, negators, abusors, exclamators, invertors } = language[languageCode];
 
 	const tokenArray = input
 		.toLowerCase()
@@ -16,7 +16,8 @@ const tokenize = (input, languageCode = 'en') => {
 			positors[sanitizedToken] ||
 			negators[sanitizedToken] ||
 			abusors[sanitizedToken] ||
-			exclamators[sanitizedToken]
+			exclamators[sanitizedToken] ||
+			invertors[sanitizedToken]
 		);
 	});
 	return tokens;
