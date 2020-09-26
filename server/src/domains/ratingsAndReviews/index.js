@@ -2,6 +2,7 @@ const constants = require('../../configs/constants');
 const get = require('lodash/get');
 const moduleController = require('../../modules/controllers');
 const verifiedPurchase = require('../../configs/verifiedPurchase.json');
+const getOverallRating = require('../utils');
 
 const handleResponse = (response, reply) => {
 	if (response && response.error) {
@@ -47,9 +48,15 @@ const postHandler = fastify => async (req, reply) => {
 	const rawComment = title + description;
 
 	const sentimentData = moduleController.sentiment().analyse({ phrase: rawComment, languageCode: 'en' });
-
+	const sentiment = constants.SENTIMENT_FACTOR[sentimentData.sentimentFactor];
 	const isverifiedPurchase = [...(verifiedPurchase[author] || [])].includes(entityId);
 
+	const review_score = getOverallRating({
+		count: sentimentData.noOfWords,
+		verifiedPurchase: isverifiedPurchase,
+		rating,
+		sentimentScore: sentiment,
+	});
 	const reqBody = {
 		entityId,
 		rating,
@@ -61,9 +68,9 @@ const postHandler = fastify => async (req, reply) => {
 		verifiedPurchase: isverifiedPurchase,
 		helpful_count: 0,
 		imageLink: [''],
-		sentiment: constants.SENTIMENT_FACTOR[sentimentData.sentimentFactor],
-		sentiment_factor: sentimentData.sentimentScore,
+		sentiment,
 		reviewStatus: sentimentData.hasAbusiveContent ? 'Abusive' : 'Published',
+		review_score,
 	};
 
 	const response = await fastify.restClient.post(constants.CREAT_NEW_REVIEW_URL, reqBody, headers);
@@ -84,6 +91,7 @@ const postHandler = fastify => async (req, reply) => {
 		rating: rating,
 		reviewStatus: 'Published',
 		verifiedPurchase: isverifiedPurchase,
+		review_score,
 	};
 
 	return reply.code(200).send({
@@ -163,9 +171,9 @@ const getHandler = fastify => async (req, reply) => {
 const updateStatus = fastify => async (req, reply) => {
 	const { reviewId, status } = req.body;
 
-	const reviewStatus = ["Abusive", "Published", "Removed"]
+	const reviewStatus = ['Abusive', 'Published', 'Removed'];
 
-	if (!reviewStatus.find((item) => item === status)) {
+	if (!reviewStatus.find(item => item === status)) {
 		badRequest(400, reply, 'Invalid Status');
 	}
 
@@ -212,7 +220,7 @@ const averageRatings = fastify => async (req, reply) => {
 		Authorization: 'Basic ZWxhc3RpYzptRG9HTFA1VmNuU3poNEVWeU4wek1FV0o=',
 	};
 	const reqBody = {
-		_source:false,
+		_source: false,
 		query: {
 			bool: {
 				must: [

@@ -11,7 +11,7 @@ const analyse = ({ phrase, opts = {}, languageCode = 'en', callback }) => {
 		labels = Object.assign(labels, opts.extras);
 	}
 
-	var tokens = tokenize(phrase),
+	var { tokens, noOfWords } = tokenize(phrase),
 		score = 0,
 		scanned = [],
 		positive = [],
@@ -34,7 +34,7 @@ const analyse = ({ phrase, opts = {}, languageCode = 'en', callback }) => {
 		score = score + tokenScore;
 
 		calculation.push(tokenScore);
-    }
+	}
 
 	var result = {
 		sentimentScore: score,
@@ -46,6 +46,7 @@ const analyse = ({ phrase, opts = {}, languageCode = 'en', callback }) => {
 			negative,
 		},
 		hasAbusiveContent,
+		noOfWords,
 	};
 
 	if (typeof callback === 'function') {

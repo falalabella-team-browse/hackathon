@@ -10,6 +10,8 @@ const tokenize = (input, languageCode = 'en') => {
 		.replace(/\s\s+/g, ' ')
 		.trim()
 		.split(' ');
+
+	const noOfWords = tokenArray.length;
 	const tokens = tokenArray.filter(token => {
 		const sanitizedToken = token.replace(/['’'']+/g, '');
 		return (
@@ -20,7 +22,7 @@ const tokenize = (input, languageCode = 'en') => {
 			invertors[sanitizedToken]
 		);
 	});
-	return tokens;
+	return { noOfWords, tokens };
 };
 
 module.exports = tokenize;
