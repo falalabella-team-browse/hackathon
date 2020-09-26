@@ -1,4 +1,4 @@
-const getBasePath = () => 'http://localhost:3000';
+const getBasePath = () => process.env.BASE_URL;
 
 const safeFetch = async (...props) => {
 	const response = await fetch(...props);
