@@ -174,13 +174,18 @@ const ProductLanding = () => {
   const { userId, productId } = useParams();
 
   useEffect(() => {
-    const element = document.getElementById("reviews");
+    const timer = setInterval(() => {
+      if (RNR) {
+        clearInterval(timer);
 
-    RNR.setHost(process.env.BASE_URL);
-    RNR.load(element, {
-      userId: userId,
-      productId: productId,
-    });
+        const element = document.getElementById("reviews");
+        RNR.setHost(process.env.BASE_URL);
+        RNR.load(element, {
+          userId: userId,
+          productId: productId,
+        });
+      }
+    }, 300);
   });
 
   return (
