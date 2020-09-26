@@ -59,6 +59,7 @@ const Content = styled.pre`
   margin-top: 10px;
   font-size: 15px;
   white-space: pre-wrap;
+  font-family: "Lato", sans-serif !important;
 `;
 
 const Verified = styled.p`
