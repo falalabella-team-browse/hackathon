@@ -18,8 +18,14 @@ if (process.env.NODE_ENV !== "production") {
   };
   load(document.getElementById("reviews"), {
     userId: "12",
-    productid: "prod1234",
+    productId: "prod1234",
   });
 } else {
-  window.RNR = { load };
+  window.RNR = {
+    load,
+    basePath: "http://localhost:3000",
+    setHost: (path) => {
+      window.RNR.basePath = path;
+    },
+  };
 }
