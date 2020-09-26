@@ -3,7 +3,7 @@ import Spinner from "react-bootstrap/Spinner";
 import styled from "styled-components";
 
 const Container = styled.div`
-  position: relative;
+  position: fixed;
   z-index: 1000;
   top: 0;
   bottom: 0;
@@ -12,7 +12,7 @@ const Container = styled.div`
   display: grid;
   justify-items: center;
   align-items: center;
-  background-color: #dfe6e9;
+  background-color: rgba(0,0,0,0.3);
 `;
 
 const FullScreenLoader = () => {

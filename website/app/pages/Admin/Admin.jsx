@@ -1,5 +1,7 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import restClients from '../../http/reviews';
+import FullScreenLoader from '../../components/FullScreenLoader';
 
 const BodyWrapper = styled.div`
   background-color: #eee;
@@ -353,54 +355,67 @@ const abused = [
     }
 ]
 
-const ReviewStatus = ({status}) => {
-    if(status === 'Abusive'){
-        return <DangerText>{status}</DangerText>
-    }
-    return status;
-}
-
-const EditReviewButtons = ({review}) => {
-    if(review.reviewStatus === 'Abusive') {
-        return(
-            <FlexWrapper>
-                <Button className="danger"> Remove </Button>
-                <Button className="success"> Publish </Button>
-            </FlexWrapper>
-        )
-    }
-
-    if(review.reviewStatus === 'Removed') {
-        return(
-            <FlexWrapper>
-                <Button className="success"> Publish </Button>
-            </FlexWrapper>
-        )
-    }
-
-    return(
-        <FlexWrapper>
-            <Button className="danger"> Remove </Button>
-            <Button className="warning"> Abusive </Button>
-        </FlexWrapper>
-    )
-}
-
-
-const POD = ({review}) => {
-    return (
-        <tr>
-            <td>{review.entityId}</td>
-            <td>{review.title}</td>
-            <td>{review.description}</td>
-            <td>{review.sentiment_factor}</td>
-            <td><ReviewStatus status={review.reviewStatus}></ReviewStatus></td>
-            <td><EditReviewButtons review={review}></EditReviewButtons></td>
-        </tr>
-    )
-}
 
 const Admin = () => {
+
+    const [ loading, setLoading] = useState(false)
+
+
+    const ReviewStatus = ({status}) => {
+        if(status === 'Abusive'){
+            return <DangerText>{status}</DangerText>
+        }
+        return status;
+    }
+
+
+    const updateReview = async (reviewId, status) => {
+        setLoading(true);
+        const response = await restClients.updateStatus(reviewId, status);
+        setLoading(false);
+        return response;
+    }
+    
+    const EditReviewButtons = ({review}) => {
+        const { reviewId } = review;
+        if(review.reviewStatus === 'Abusive') {
+            return(
+                <FlexWrapper>
+                    <Button className="danger" onClick={() => updateReview(reviewId, 'Removed')}> Remove </Button>
+                    <Button className="success" onClick={() => updateReview(reviewId, 'Published')}> Publish </Button>
+                </FlexWrapper>
+            )
+        }
+    
+        if(review.reviewStatus === 'Removed') {
+            return(
+                <FlexWrapper>
+                    <Button className="success" onClick={() => updateReview(reviewId, 'Published')}> Publish </Button>
+                </FlexWrapper>
+            )
+        }
+    
+        return(
+            <FlexWrapper>
+                <Button className="danger" onClick={() => updateReview(reviewId, 'Removed')}> Remove </Button>
+                <Button className="warning" onClick={() => updateReview(reviewId, 'Abusive')}> Abusive </Button>
+            </FlexWrapper>
+        )
+    }
+
+    const POD = ({review}) => {
+        return (
+            <tr>
+                <td>{review.entityId}</td>
+                <td>{review.title}</td>
+                <td>{review.description}</td>
+                <td>{review.sentiment_factor}</td>
+                <td><ReviewStatus status={review.reviewStatus}></ReviewStatus></td>
+                <td><EditReviewButtons review={review}></EditReviewButtons></td>
+            </tr>
+        )
+    }
+
     return(
         <BodyWrapper>
             <Container>
@@ -448,6 +463,8 @@ const Admin = () => {
                                 <POD review={item} />
                             ))}
                         </Table>
+
+                        { loading && <FullScreenLoader /> }
                     </Content>
                 </ContentWrapper>
             </Container>

@@ -162,8 +162,14 @@ const getHandler = fastify => async (req, reply) => {
 	});
 };
 
-const deleteHandler = fastify => async (req, reply) => {
-	const { id } = req.params;
+const updateStatus = fastify => async (req, reply) => {
+	const { reviewId, status } = req.body;
+
+	const reviewStatus = ["Abusive", "Published", "Removed"]
+
+	if (!reviewStatus.find((item) => item === status)) {
+		badRequest(400, reply, 'Invalid Status');
+	}
 
 	const headers = {
 		Authorization: 'Basic ZWxhc3RpYzptRG9HTFA1VmNuU3poNEVWeU4wek1FV0o=',
@@ -171,11 +177,11 @@ const deleteHandler = fastify => async (req, reply) => {
 
 	const reqBody = {
 		doc: {
-			reviewStatus: 'removed',
+			reviewStatus: status,
 		},
 	};
 
-	const url = constants.UPDATE_REVIEW_URL + `/${id}`;
+	const url = constants.UPDATE_REVIEW_URL + `/${reviewId}`;
 
 	const response = await fastify.restClient.post(url, reqBody, headers);
 
@@ -376,6 +382,6 @@ module.exports = async fastify => {
 	fastify.post('/ratingsAndReviews/flag', markHelpFul(fastify));
 	fastify.post('/ratingsAndReviews/edit', editHandler(fastify));
 	fastify.get('/ratingsAndReviews/:id', getHandler(fastify));
-	fastify.delete('/ratingsAndReviews/:id', deleteHandler(fastify));
+	fastify.post('/ratingsAndReviews/updateStatus', updateStatus(fastify));
 	fastify.get('/averageRatings/:id', averageRatings(fastify));
 };
