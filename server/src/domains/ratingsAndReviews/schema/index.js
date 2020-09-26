@@ -3,7 +3,7 @@ const createReviewSchema = require('./createReview');
 const editReviewSchema = require('./editReview');
 const flagReviewSchema = require('./flagReview');
 const { getReviewById , getReviews } = require('./getReview');
-const { aggregation, analytics } = require('./aggregation')
+const { aggregation, analytics, histogram } = require('./aggregation')
 
 module.exports = {
     updateReviewSchema,
@@ -13,5 +13,6 @@ module.exports = {
     getReviewById,
     getReviews,
     aggregation,
-    analytics
+    analytics,
+    histogram
 }

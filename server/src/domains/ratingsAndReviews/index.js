@@ -483,5 +483,5 @@ module.exports = async fastify => {
 	fastify.get('/ratingsAndReviews/:id', apiSchemas.getReviewById, getHandler(fastify));
 	fastify.get('/averageRatings/:id', apiSchemas.aggregation, averageRatings(fastify, 'average'));
 	fastify.get('/analytics/:id', apiSchemas.analytics, averageRatings(fastify, 'analytics'));
-	fastify.get('/histogram/:id', histogram(fastify));
+	fastify.get('/histogram/:id', apiSchemas.histogram, histogram(fastify));
 };

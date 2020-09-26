@@ -59,4 +59,34 @@ const analytics =  {
 	}
 }
 
-module.exports = { aggregation, analytics }
+const histogram =  {
+	schema: {
+	  description: 'This API is to get analytical data on reviews and ratings of a product',
+	  tags: ['For Admin and Analytics'],
+	  params: {
+		type: 'object',
+		properties: {
+          id: { 
+            type: 'string',
+          }
+		}
+	  },
+	  response: {
+		  200: {
+			description: 'Successful response',
+			type: 'object'
+		  },
+		  500: {
+			  description: "Internal Server Error",
+			  type: 'object',
+			  properties: {
+				error: {
+					type: 'object',
+				},
+			  }
+		  }
+	  }
+	}
+}
+
+module.exports = { aggregation, analytics, histogram }
