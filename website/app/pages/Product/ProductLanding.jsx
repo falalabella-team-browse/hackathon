@@ -83,7 +83,6 @@ const ProductSpecifications = styled.div`
 const AdditionInformationContainer = styled.div`
   background-color: #fff;
   margin-top: 30px;
-  padding: 20px;
 `;
 
 const ProductSpecificationsColumn = styled.div`
