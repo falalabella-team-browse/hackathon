@@ -4,9 +4,8 @@ import { useUserContext } from "../context/UserContext";
 import { Route, useHistory, useLocation } from "react-router-dom";
 import Switch from "react-bootstrap/esm/Switch";
 import http from "../http";
-import ProductLanding from './Product/ProductLanding';
-import Admin from './Admin/Admin'
-
+import ProductLanding from "./Product/ProductLanding";
+import Admin from "./Admin/Admin";
 
 const Shell = () => {
   // const [isLoaded, setLoaded] = useState(true);
@@ -43,17 +42,16 @@ const Shell = () => {
   //   });
   // }, [history, location]);
 
-
-  return(
+  return (
     <Switch>
-      <Route path="/:userId/:productId">
-        <ProductLanding />
-      </Route>
       <Route path="/admin" exact>
         <Admin />
       </Route>
+      <Route path="/:userId/:productId">
+        <ProductLanding />
+      </Route>
     </Switch>
-  )
+  );
 };
 
 export default Shell;
