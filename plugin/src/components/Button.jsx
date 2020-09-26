@@ -19,9 +19,9 @@ const OutlineButton = styled.button`
 `;
 
 const FillButton = styled.button`
-  background-color: transparent;
-  color: black;
-  border: 1px solid black;
+  background-color: #aad500;
+  color: white;
+  border: none;
   border-radius: 4px;
   outline: none;
   padding: 10px 18px;
@@ -29,10 +29,10 @@ const FillButton = styled.button`
   text-transform: uppercase;
   font-size: 14px;
   letter-spacing: 0.7px;
-  width: 100%;
+  margin-top: 15px;
 
   &:hover {
-    background-color: rgba(0, 0, 0, 0.15);
+    background-color: #bcec02;
   }
 `;
 
