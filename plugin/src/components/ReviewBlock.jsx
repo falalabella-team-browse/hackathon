@@ -80,7 +80,8 @@ const ReviewBlock = ({ review }) => {
 	const { id, helpful_count, description, title, verifiedPurchase, rating, modified_date, sentiment } = review;
 
 	const [expanded, setExpanded] = useState(false);
-	const [hfCount, setHfCount] = useState(helpful_count || 0);
+	// const [useFul, setUseFul] = useState(false);
+	const [hfCount, setHfCount] = useState(helpful_count);
 
 	const handleExpansion = e => {
 		e.preventDefault();
@@ -89,10 +90,11 @@ const ReviewBlock = ({ review }) => {
 
 	const updateHelpFulContent = e => {
 		e.preventDefault();
-		setHfCount(hfCount + 1);
+		let count = hfCount == helpful_count ? hfCount + 1 : hfCount - 1;
+		setHfCount(count);
 		http.increamenHelpfulCount({
 			id,
-			helpful_count: hfCount + 1,
+			helpful_count: count,
 			description,
 			title,
 			verifiedPurchase,
@@ -100,6 +102,10 @@ const ReviewBlock = ({ review }) => {
 			modified_date,
 			sentiment,
 		});
+	};
+
+	const iconStyle = {
+		color: hfCount === helpful_count ? 'black' : 'green',
 	};
 
 	return rating !== 0 || title || description ? (
@@ -131,7 +137,7 @@ const ReviewBlock = ({ review }) => {
 				</Verified>
 				<Helpful>
 					<ActionButton onClick={updateHelpFulContent}>
-						<Thumbs />
+						<Thumbs options={iconStyle} />
 					</ActionButton>
 					&nbsp;&nbsp;{' '}
 					{hfCount ? (
