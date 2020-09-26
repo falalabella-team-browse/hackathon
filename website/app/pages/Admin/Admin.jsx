@@ -358,7 +358,17 @@ const abused = [
 
 const Admin = () => {
 
-    const [ loading, setLoading] = useState(false)
+    const [ loading, setLoading] = useState(false);
+    const [ reviewsList , getReviewList] = useState({});
+
+    const datafetcher = async () => {
+        const response = await restClients.getAllReviews();
+        response.success ? getReviewList(response.body.data.data) : getReviewList([]);
+    }
+
+    useEffect(()=>{
+       datafetcher();
+    }, [])
 
 
     const ReviewStatus = ({status}) => {
