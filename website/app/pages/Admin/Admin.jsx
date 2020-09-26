@@ -66,12 +66,14 @@ const Table = styled.table`
    width : 100%;
 
    tr {
-       padding: 5px;
+       padding: 10px 5px;
+       border-bottom: 1px solid #eee;
    }
 
    td {
       padding: 5px 15px;
       font-size : 12.5px;
+      max-width: 350px;
    }
 `
 
@@ -157,213 +159,18 @@ const Button = styled.button`
    }
 `
 
-const abused = [
-    {
-        "reviewId": "123",
-        "author": "12",
-        "entityId": "prod123",
-        "title": "Good Product",
-        "description": "very satisfied with the quality",
-        "rating": 5,
-        "helpful_count":0,
-        "sentiment_factor":4,
-        "reviewStatus": "Abusive"
-    },
-    {
-        "reviewId": "123",
-        "author": "12",
-        "entityId": "prod123",
-        "title": "Good Product",
-        "description": "very satisfied with the quality",
-        "rating": 5,
-        "helpful_count":0,
-        "sentiment_factor":4,
-        "reviewStatus": "Published"
-    },
-    {
-        "reviewId": "123",
-        "author": "12",
-        "entityId": "sku456",
-        "title": "Bad Really",
-        "description": "very annoyed",
-        "rating": 5,
-        "helpful_count":0,
-        "sentiment_factor": 2,
-        "reviewStatus": "Published"
-    },
-    {
-        "reviewId": "123",
-        "author": "12",
-        "entityId": "prod123",
-        "title": "Good Product",
-        "description": "very satisfied with the quality",
-        "rating": 5,
-        "helpful_count":0,
-        "sentiment_factor":4,
-        "reviewStatus": "Published"
-    },
-    {
-        "reviewId": "123",
-        "author": "12",
-        "entityId": "sku456",
-        "title": "Bad Really",
-        "description": "very annoyed",
-        "rating": 5,
-        "helpful_count":0,
-        "sentiment_factor": -2,
-        "reviewStatus": "Abusive"
-    },
-    {
-        "reviewId": "123",
-        "author": "12",
-        "entityId": "prod123",
-        "title": "Good Product",
-        "description": "very satisfied with the quality",
-        "rating": 5,
-        "helpful_count":0,
-        "sentiment_factor":4,
-        "reviewStatus": "Abusive"
-    },{
-        "reviewId": "123",
-        "author": "12",
-        "entityId": "prod123",
-        "title": "Good Product",
-        "description": "very satisfied with the quality",
-        "rating": 5,
-        "helpful_count":0,
-        "sentiment_factor":4,
-        "reviewStatus": "Abusive"
-    },
-    {
-        "reviewId": "123",
-        "author": "12",
-        "entityId": "prod123",
-        "title": "Good Product",
-        "description": "very satisfied with the quality",
-        "rating": 5,
-        "helpful_count":0,
-        "sentiment_factor":4,
-        "reviewStatus": "Published"
-    },
-    {
-        "reviewId": "123",
-        "author": "12",
-        "entityId": "sku456",
-        "title": "Bad Really",
-        "description": "very annoyed",
-        "rating": 5,
-        "helpful_count":0,
-        "sentiment_factor": 2,
-        "reviewStatus": "Published"
-    },
-    {
-        "reviewId": "123",
-        "author": "12",
-        "entityId": "prod123",
-        "title": "Good Product",
-        "description": "very satisfied with the quality",
-        "rating": 5,
-        "helpful_count":0,
-        "sentiment_factor":4,
-        "reviewStatus": "Published"
-    },
-    {
-        "reviewId": "123",
-        "author": "12",
-        "entityId": "prod123",
-        "title": "Good Product",
-        "description": "very satisfied with the quality",
-        "rating": 5,
-        "helpful_count":0,
-        "sentiment_factor":4,
-        "reviewStatus": "Removed"
-    },
-    {
-        "reviewId": "123",
-        "author": "12",
-        "entityId": "sku456",
-        "title": "Bad Really",
-        "description": "very annoyed",
-        "rating": 5,
-        "helpful_count":0,
-        "sentiment_factor": -2,
-        "reviewStatus": "Removed"
-    },
-    {
-        "reviewId": "123",
-        "author": "12",
-        "entityId": "prod123",
-        "title": "Good Product",
-        "description": "very satisfied with the quality",
-        "rating": 5,
-        "helpful_count":0,
-        "sentiment_factor":4,
-        "reviewStatus": "Removed"
-    },{
-        "reviewId": "123",
-        "author": "12",
-        "entityId": "prod123",
-        "title": "Good Product",
-        "description": "very satisfied with the quality",
-        "rating": 5,
-        "helpful_count":0,
-        "sentiment_factor":4,
-        "reviewStatus": "Removed"
-    },
-    {
-        "reviewId": "123",
-        "author": "12",
-        "entityId": "prod123",
-        "title": "Good Product",
-        "description": "very satisfied with the quality",
-        "rating": 5,
-        "helpful_count":0,
-        "sentiment_factor":4,
-        "reviewStatus": "Published"
-    },
-    {
-        "reviewId": "123",
-        "author": "12",
-        "entityId": "sku456",
-        "title": "Bad Really",
-        "description": "very annoyed",
-        "rating": 5,
-        "helpful_count":0,
-        "sentiment_factor": 2,
-        "reviewStatus": "Published"
-    },
-    {
-        "reviewId": "123",
-        "author": "12",
-        "entityId": "prod123",
-        "title": "Good Product",
-        "description": "very satisfied with the quality",
-        "rating": 5,
-        "helpful_count":0,
-        "sentiment_factor":4,
-        "reviewStatus": "Published"
-    },{
-        "reviewId": "123",
-        "author": "12",
-        "entityId": "prod123",
-        "title": "Good Product",
-        "description": "very satisfied with the quality",
-        "rating": 5,
-        "helpful_count":0,
-        "sentiment_factor":4,
-        "reviewStatus": "Published"
-    }
-]
-
 
 const Admin = () => {
 
     const [ loading, setLoading] = useState(false);
-    const [ reviewsList , getReviewList] = useState({});
+    const [ reviewsList , getReviewList] = useState([]);
 
     const datafetcher = async () => {
+        setLoading(true);
         const response = await restClients.getAllReviews();
         response.success ? getReviewList(response.body.data.data) : getReviewList([]);
+        setLoading(false);
+        return;
     }
 
     useEffect(()=>{
@@ -469,7 +276,7 @@ const Admin = () => {
                              <th><Title> Status </Title></th>
                              <th><Title> Update </Title></th>
                             </tr>
-                            {abused.map((item)=>(
+                            {reviewsList.map((item)=>(
                                 <POD review={item} />
                             ))}
                         </Table>
