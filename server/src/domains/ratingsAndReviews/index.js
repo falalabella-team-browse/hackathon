@@ -354,7 +354,12 @@ const searchRatings = fastify => async (req, reply) => {
 		return handleResponse({}, reply);
 	}
 
-	const results = response.hits;
+	const results = {
+		data: response.hits.hits,
+		meta: {
+			total: response.hits.total.value,
+		},
+	};
 	handleResponse(results, reply);
 };
 
