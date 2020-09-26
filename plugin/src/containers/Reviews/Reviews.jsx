@@ -21,9 +21,9 @@ const ReviewList = styled.div`
 `;
 
 const OPTIONS = [
-  { label: "Most Recent", value: "created_date_asc" },
-  { label: "Most Rated", value: "rating_asc" },
-  { label: "Most Helpful", value: "helpful_count_asc" },
+  { label: "Most Recent", value: "created_date:asc" },
+  { label: "Most Rated", value: "rating:asc" },
+  { label: "Most Helpful", value: "helpful_count:asc" },
 ];
 
 const ReviewsContainer = () => {

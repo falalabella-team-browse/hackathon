@@ -32,6 +32,10 @@ const postHandler = fastify => async (req, reply) => {
 		badRequest(400, reply, 'Invalid Rating');
 	}
 
+	if (images.length > 5) {
+		badRequest(400, reply, 'Only 5 images are allowed');
+	}
+
 	if (title.length > 160) {
 		badRequest(400, reply, 'Invalid Title');
 	}
@@ -51,6 +55,8 @@ const postHandler = fastify => async (req, reply) => {
 	const sentiment = constants.SENTIMENT_FACTOR[sentimentData.sentimentFactor];
 	const isverifiedPurchase = [...(verifiedPurchase[author] || [])].includes(entityId);
 
+	const ids = images.map(img => fastify.storage.saveImage(img));
+
 	const review_score = getOverallRating({
 		count: sentimentData.noOfWords,
 		verifiedPurchase: isverifiedPurchase,
@@ -67,7 +73,7 @@ const postHandler = fastify => async (req, reply) => {
 		modified_date: new Date(),
 		verifiedPurchase: isverifiedPurchase,
 		helpful_count: 0,
-		imageLink: [''],
+		imageLink: ids,
 		sentiment,
 		reviewStatus: sentimentData.hasAbusiveContent ? 'Abusive' : 'Published',
 		review_score,
@@ -92,6 +98,7 @@ const postHandler = fastify => async (req, reply) => {
 		reviewStatus: 'Published',
 		verifiedPurchase: isverifiedPurchase,
 		review_score,
+		imageLink: ids,
 	};
 
 	return reply.code(200).send({

@@ -65,6 +65,7 @@ const VIEW_LOADED = "Loaded";
 const ReviewForm = ({ onClose }) => {
   const [view, setView] = useState(VIEW_LOADED);
   const [error, setError] = useState("");
+  const [images, setImages] = useState([]);
   const user = useUser();
 
   const [data, setData] = useState({
@@ -109,7 +110,7 @@ const ReviewForm = ({ onClose }) => {
         data.title,
         user.userId,
         data.content,
-        []
+        images
       )
       .then((res) => {
         console.log(res);
@@ -192,7 +193,7 @@ const ReviewForm = ({ onClose }) => {
           />
 
           <Title>Subir foto</Title>
-          <ImagePicker />
+          <ImagePicker images={images} setImages={setImages} />
 
           {error && <ErrorText>{error}</ErrorText>}
 
