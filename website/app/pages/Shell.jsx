@@ -5,6 +5,7 @@ import { Route, useHistory, useLocation } from "react-router-dom";
 import Switch from "react-bootstrap/esm/Switch";
 import http from "../http";
 import ProductLanding from './Product/ProductLanding';
+import Admin from './Admin/Admin'
 
 
 const Shell = () => {
@@ -47,6 +48,9 @@ const Shell = () => {
     <Switch>
       <Route path="/:userId/:productId">
         <ProductLanding />
+      </Route>
+      <Route path="/admin" exact>
+        <Admin />
       </Route>
     </Switch>
   )
