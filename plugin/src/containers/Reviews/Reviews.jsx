@@ -47,12 +47,12 @@ const ReviewsContainer = () => {
 
     const data = await http.getAllReviews(user.productId, page);
 
-    if (!data.success || data.body.data.length === 0) {
+    if (!data.success || data.body.data.hits.hits.length === 0) {
       setHasMore(false);
       return;
     }
 
-    setReviews([...reviews, ...data.body.data]);
+    setReviews([...reviews, ...data.body.data.hits.hits]);
     setLoading(false);
   };
 

@@ -76,7 +76,6 @@ const ExpandButton = styled.a`
 `;
 
 const ReviewBlock = ({ review }) => {
-  console.log("review._source", review._source);
   const {
     helpful_count,
     description,
@@ -93,7 +92,7 @@ const ReviewBlock = ({ review }) => {
     setExpanded(!expanded);
   };
 
-  return rating !== 0 ? (
+  return rating !== 0 || title || description ? (
     <Container>
       <Metadata>
         <RatingView rating={rating} size={15}></RatingView>
