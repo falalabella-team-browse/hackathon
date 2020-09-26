@@ -9,6 +9,11 @@ const Container = styled.div`
   border-bottom: 2px solid #dfdfdf;
   max-width: 300px;
   cursor: pointer;
+
+  @media (max-width: 568px) {
+    width: 100%;
+    max-width: initial;
+  }
 `;
 
 const Selected = styled.span`

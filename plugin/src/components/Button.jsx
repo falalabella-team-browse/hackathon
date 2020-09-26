@@ -13,6 +13,10 @@ const OutlineButton = styled.button`
   font-size: 14px;
   letter-spacing: 0.7px;
 
+  @media (max-width: 568px) {
+    width: 100%;
+  }
+
   &:hover {
     background-color: rgba(0, 0, 0, 0.15);
   }

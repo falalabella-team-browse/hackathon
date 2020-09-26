@@ -19,17 +19,35 @@ const ReviewsSummarySection = styled.div`
   margin-top: 25px;
   display: flex;
   align-items: center;
+
+  @media (max-width: 568px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 `;
 
 const RatingButtonContainer = styled.div`
   flex-grow: 1;
   text-align: right;
+
+  @media (max-width: 568px) {
+    width: 100%;
+    margin-top: 25px;
+  }
 `;
 
 const ContentContainer = styled.div`
   display: grid;
-  grid-template-columns: 30% 70%;
-  margin-top: 45px;
+
+  @media (max-width: 568px) {
+    grid-template-rows: 1fr auto;
+    grid-row-gap: 48px;
+  }
+
+  @media (min-width: 568px) {
+    grid-template-columns: 30% 70%;
+    margin-top: 45px;
+  }
 `;
 
 const AppShell = () => {

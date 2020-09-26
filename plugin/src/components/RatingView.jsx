@@ -5,6 +5,10 @@ import Star, { VIEW_FULL, VIEW_HALF, VIEW_EMPTY } from "./Star";
 const MAX_RATING = 5;
 const Container = styled.div`
   cursor: ${(prop) => (prop.editable ? "pointer" : "auto")};
+
+  @media (max-width: 568px) {
+    margin-top: 18px;
+  }
 `;
 
 const getViews = (rating) => {

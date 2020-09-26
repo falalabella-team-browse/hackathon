@@ -16,8 +16,10 @@ const Container = styled.div`
 const Wrapper = styled.div`
   background-color: white;
   padding: 25px;
-  min-width: 600px;
+  width: 600px;
   min-height: 480px;
+  max-width: 95vw;
+  max-height: 90vh;
 `;
 
 const Modal = ({ children }) => {

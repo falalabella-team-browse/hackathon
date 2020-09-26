@@ -55,7 +55,11 @@ const ImageWrapper = styled.div`
 `;
 
 const Image = styled.img`
-  max-width: 90vh;
+  max-width: 65vw;
+
+  @media (max-width: 568px) {
+    max-width: 90%;
+  }
 `;
 
 const ActionButtonLeft = styled.div`
