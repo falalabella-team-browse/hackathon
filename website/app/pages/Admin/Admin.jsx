@@ -172,8 +172,10 @@ const Admin = () => {
     const [ penCount , setPenCount] = useState(0);
 
     const sortOptions = [
-        { label: "Most Recent", value: "created_date:desc" },
-        { label: "Most Rated", value: "rating:desc" },
+        { label: "Relevant", value: "review_score:desc" },
+        { label: "Recent", value: "created_date:desc" },
+        { label: "High to low", value: "rating:desc" },
+        { label: "Low to high", value: "rating:asc" },
         { label: "Most Helpful", value: "helpful_count:desc" },
     ];
 
@@ -249,9 +251,10 @@ const Admin = () => {
         return (
             <tr>
                 <td>{review.entityId}</td>
+                <td>{review.author}</td>
                 <td>{review.title}</td>
                 <td>{review.description}</td>
-                <td>{review.author}</td>
+                <td>{review.rating}</td>
                 <td>{getEmoji[review.sentiment]}</td>
                 <td><ReviewStatus status={review.reviewStatus}></ReviewStatus></td>
                 <td><EditReviewButtons review={review}></EditReviewButtons></td>
@@ -351,9 +354,10 @@ const Admin = () => {
                         <Table>
                            <tr>
                              <th><Title> Entity </Title></th>
+                             <th><Title>Author</Title></th>
                              <th><Title> Title </Title></th>
                              <th><Title> Description </Title></th>
-                             <th><Title>Author</Title></th>
+                             <th><Title>Rating</Title></th>
                              <th><Title> Sentiment </Title></th>
                              <th><Title> Status </Title></th>
                              <th><Title> Update </Title></th>

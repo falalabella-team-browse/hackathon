@@ -289,7 +289,14 @@ const averageRatings = (fastify, method = 'average') => async (req, reply) => {
 	const averageRating = get(response, 'aggregations.avg_rating.value', 0);
 	const buckets = get(response, 'aggregations.rating_buckets.buckets', []);
 	const sentiments = get(response, 'aggregations.sentiment_buckets.buckets', []);
-	const review_status = get(response, 'aggregations.review_status.buckets', []);
+	const review = get(response, 'aggregations.review_status.buckets', []);
+
+	const review_status =  review.map(bkt => {
+		return {
+			key: bkt.key,
+			value: bkt.doc_count,
+		};
+	});
 
 	const sentiment_buckets = sentiments.map(bkt => {
 		return {
