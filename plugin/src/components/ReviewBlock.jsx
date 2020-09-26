@@ -103,12 +103,13 @@ const ReviewBlock = ({ review, onChange }) => {
     rating,
     modified_date,
     imageLink,
+    author,
     sentiment,
   } = review;
 
   const user = useUser();
 
-  const showEditActions = user.userId === id;
+  const showEditActions = user.userId === author;
 
   const [expanded, setExpanded] = useState(false);
   // const [useFul, setUseFul] = useState(false);
