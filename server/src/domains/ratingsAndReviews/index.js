@@ -119,42 +119,35 @@ const editHandler = fastify => async (req, reply) => {
 		badRequest(400, reply, 'Invalid Title');
 	}
 
-
 	if (images.length > 5) {
-    badRequest(400, reply, "Only 5 images are allowed");
-  }
+		badRequest(400, reply, 'Only 5 images are allowed');
+	}
 
 	const headers = {
 		Authorization: 'Basic ZWxhc3RpYzptRG9HTFA1VmNuU3poNEVWeU4wek1FV0o=',
 	};
 	const rawComment = title + description;
 
+	const sentimentData = moduleController.sentiment().analyse({ phrase: rawComment, languageCode: 'en' });
 
-	const sentimentData = moduleController
-    .sentiment()
-    .analyse({ phrase: rawComment, languageCode: "en" });
+	const reviewStatus = sentimentData.hasAbusiveContent ? 'Abusive' : 'Published';
 
-  const reviewStatus = sentimentData.hasAbusiveContent
-    ? "Abusive"
-	  : "Published";
-	
-	const ids = images.map((img) => fastify.storage.saveImage(img));
-	console.log("ids", ids);
+	const ids = images.map(img => fastify.storage.saveImage(img));
+	console.log('ids', ids);
 
 	const reqBody = {
-    doc: {
-      rating,
-      title,
-      description,
-      modified_date: new Date(),
-      reviewStatus,
-      imageLink: ids,
-    },
-  };
+		doc: {
+			rating,
+			title,
+			description,
+			modified_date: new Date(),
+			reviewStatus,
+			imageLink: ids,
+		},
+	};
 
 	const url = constants.UPDATE_REVIEW_URL + `/${id}`;
 	await fastify.restClient.post(url, reqBody, headers);
-
 
 	reply.code(200).send(reqBody.doc);
 };
@@ -261,11 +254,11 @@ const averageRatings = fastify => async (req, reply) => {
 						},
 					},
 				],
-				must_not: [
+				must: [
 					{
 						term: {
 							reviewStatus: {
-								value: 'Abusive',
+								value: 'Published',
 							},
 						},
 					},
