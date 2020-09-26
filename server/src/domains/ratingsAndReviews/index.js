@@ -267,19 +267,19 @@ const averageRatings = fastify => async (req, reply) => {
 					ranges: [
 						{
 							from: 0.0,
-							to: 1.0,
+							to: 1.01,
 						},
 						{
 							from: 1.0,
-							to: 2.0,
+							to: 2.01,
 						},
 						{
 							from: 2.0,
-							to: 3.0,
+							to: 3.01,
 						},
 						{
 							from: 3.0,
-							to: 4.0,
+							to: 4.01,
 						},
 						{
 							from: 4.0,
@@ -301,10 +301,10 @@ const averageRatings = fastify => async (req, reply) => {
 	}
 
 	const enums = {
-		'0.0-1.0': '1',
-		'1.0-2.0': '2',
-		'2.0-3.0': '3',
-		'3.0-4.0': '4',
+		'0.0-1.01': '1',
+		'1.0-2.01': '2',
+		'2.0-3.01': '3',
+		'3.0-4.01': '4',
 		'4.0-5.01': '5',
 	};
 

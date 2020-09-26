@@ -2,7 +2,7 @@ const abusiveWords = require('./language/en/abusors.json');
 const language = require('./language');
 
 const hasAbusivesContent = (tokens = []) => {
-	return tokens.filter(token => abusiveWords[token]).length ? true : false;
+	return tokens.filter(token => abusiveWords[token]).length > 2 ? true : false;
 };
 
 const getSentimentFactor = score => {
