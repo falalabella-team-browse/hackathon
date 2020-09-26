@@ -12,11 +12,11 @@ const hasAbusivesContent = (tokens = []) => {
 
 const getSentimentFactor = score => {
 	if (score > 2) {
-		return score < 5 ? 'Happy' : 'Super Happy';
+		return score < 5 ? 'HAPPY' : 'SUPER_HAPPY';
 	} else if (score < -1) {
-		return score > -5 ? 'Sad' : 'Super Sad';
+		return score > -5 ? 'SAD' : 'SUPER_SAD';
 	}
-	return 'Neutral';
+	return 'NEUTRAL';
 };
 
 var defaultScoringStrategy = {

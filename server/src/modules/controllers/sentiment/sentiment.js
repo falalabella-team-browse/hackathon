@@ -2,14 +2,6 @@ var tokenize = require('./tokenize');
 const languageData = require('./language');
 const utils = require('./utils');
 
-const getCalculation = calc => {
-	var sum = 0;
-	calc.forEach(dt => {
-		sum = sum + dt;
-	});
-	return sum;
-};
-
 const analyse = ({ phrase, opts = {}, languageCode = 'en', callback }) => {
 	if (typeof phrase === 'undefined') phrase = '';
 

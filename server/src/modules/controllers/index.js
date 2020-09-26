@@ -1,5 +1,5 @@
-const sentimentController = require('./sentiment');
+const sentiment = require('./sentiment');
 
 module.exports = {
-	sentimentController,
+	sentiment,
 };

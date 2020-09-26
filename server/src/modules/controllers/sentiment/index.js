@@ -1,12 +1,9 @@
 const Sentiment = require('./sentiment');
 
-const sentimentController = fastify => ({
-	async analyse(body) {
-		const sentimentFactor = Sentiment.analyse(body);
-		return {
-			result: sentimentFactor,
-		};
+const sentiment = fastify => ({
+	analyse(body) {
+		return Sentiment.analyse(body);
 	},
 });
 
-module.exports = sentimentController;
+module.exports = sentiment;

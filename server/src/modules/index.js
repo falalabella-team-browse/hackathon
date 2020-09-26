@@ -1,9 +1,9 @@
 const fp = require('fastify-plugin');
-const { sentimentController } = require('./controllers');
+const { sentiment } = require('./controllers');
 
-const analyserModule = fp(async (fastify, opt, next) => {
+const analyserModule = fp((fastify, opt, next) => {
 	fastify.decorate('module', {
-		sentiment: sentimentController(fastify),
+		sentiment: sentiment(fastify),
 	});
 	next();
 });
