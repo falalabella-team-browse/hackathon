@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { useParams } from "react-router-dom";
 import styled from "styled-components";
 
 const PdpBody = styled.div`
@@ -170,13 +171,15 @@ const AddToCartButton = styled.button`
 `;
 
 const ProductLanding = () => {
+  const { userId, productId } = useParams();
+
   useEffect(() => {
     const element = document.getElementById("reviews");
 
     RNR.setHost(process.env.BASE_URL);
     RNR.load(element, {
-      userId: "12",
-      productId: "prod1234",
+      userId: userId,
+      productId: productId,
     });
   });
 

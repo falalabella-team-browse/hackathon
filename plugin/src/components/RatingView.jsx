@@ -23,13 +23,7 @@ const getViews = (rating) => {
     });
 };
 
-const RatingView = ({
-  rating,
-  size,
-  editable = false,
-  onChange,
-  gap = { gap },
-}) => {
+const RatingView = ({ rating, size, editable = false, onChange, gap = 0 }) => {
   const [views, setViews] = useState(getViews(rating));
 
   const handleOnClick = (i) => () => {

@@ -1,8 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { FilledButton } from "../../components/Button";
+import CircularLoader from "../../components/CircluarLoader";
 import Dropdown from "../../components/Dropdown";
 import ReviewBlock from "../../components/ReviewBlock";
+import { useUser } from "../../Context/UserContext";
+import http from "../../http";
 
 const Container = styled.div``;
 
@@ -24,9 +27,45 @@ const OPTIONS = [
 
 const ReviewsContainer = () => {
   const [selected, setSelected] = useState(OPTIONS[0].value);
+  const [reviews, setReviews] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
+
+  const user = useUser();
 
   const handleOptionChange = (val) => {
     setSelected(val);
+  };
+
+  const loadReviews = async () => {
+    if (loading || !hasMore) {
+      return;
+    }
+
+    setLoading(true);
+
+    const data = await http.getAllReviews(user.productId, page);
+
+    if (!data.success || data.body.data.hits.hits.length === 0) {
+      setHasMore(false);
+      return;
+    }
+
+    setReviews([...reviews, ...data.body.data.hits.hits]);
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    loadReviews();
+  }, [page]);
+
+  const handleLoadMore = () => {
+    if (loading || !hasMore) {
+      return;
+    }
+
+    setPage(page + 1);
   };
 
   return (
@@ -40,9 +79,19 @@ const ReviewsContainer = () => {
       />
 
       <ReviewList>
-        <ReviewBlock></ReviewBlock>
+        {reviews.map((r) => (
+          <ReviewBlock key={r._id} review={r}></ReviewBlock>
+        ))}
 
-        <FilledButton>Load More</FilledButton>
+        {hasMore && (
+          <FilledButton onClick={handleLoadMore}>
+            {loading ? (
+              <CircularLoader size="18px" color="white" />
+            ) : (
+              "Load More"
+            )}
+          </FilledButton>
+        )}
       </ReviewList>
     </Container>
   );
