@@ -76,7 +76,9 @@ const ReviewsContainer = ({ counter }) => {
   }, [page]);
 
   useEffect(() => {
-    reset();
+    if (reviews.length) {
+      reset();
+    }
   }, [selected, counter]);
 
   return (
