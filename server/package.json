@@ -4,7 +4,8 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "watch": "JWT_SECRET=96e48b23707c84 nodemon src/index.js | pino-pretty"
+    "watch": "JWT_SECRET=96e48b23707c84 nodemon src/index.js | pino-pretty",
+    "start": "DB_USERNAME=falauser DB_PASSWORD=fala2020 DB_NAME=hackathon AUTH_DB=admin DB_HOST=mdb.rlab.app JWT_SECRET=a4aa0fbae1896ef55087 node src/index.js | pino-pretty"
   },
   "dependencies": {
     "abort-controller": "^3.0.0",
@@ -14,6 +15,9 @@
     "fastify-env": "^2.0.1",
     "fastify-jwt": "^2.1.3",
     "fastify-plugin": "^2.3.3",
+    "loadash": "^1.0.0",
+    "lodash": "^4.17.20",
+    "mime": "^2.4.6",
     "mongoose": "^5.10.4",
     "node-fetch": "^2.6.1",
     "nodemon": "^2.0.4",

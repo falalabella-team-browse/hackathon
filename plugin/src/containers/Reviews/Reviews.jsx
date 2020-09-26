@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
+import { FilledButton } from "../../components/Button";
+import Dropdown from "../../components/Dropdown";
 import ReviewBlock from "../../components/ReviewBlock";
 
 const Container = styled.div``;
@@ -15,15 +17,32 @@ const ReviewList = styled.div`
   margin-top: 15px;
 `;
 
-const REVIEW_DATA = Array(18);
+const OPTIONS = [
+  { label: "Most Recent", value: "recent" },
+  { label: "Most Helpful", value: "helpful" },
+];
 
 const ReviewsContainer = () => {
+  const [selected, setSelected] = useState(OPTIONS[0].value);
+
+  const handleOptionChange = (val) => {
+    setSelected(val);
+  };
+
   return (
     <Container>
       <Heading>Reviews (18)</Heading>
 
+      <Dropdown
+        options={OPTIONS}
+        selected={selected}
+        onChange={handleOptionChange}
+      />
+
       <ReviewList>
         <ReviewBlock></ReviewBlock>
+
+        <FilledButton>Load More</FilledButton>
       </ReviewList>
     </Container>
   );

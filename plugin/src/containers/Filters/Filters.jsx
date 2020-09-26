@@ -3,7 +3,7 @@ import styled from "styled-components";
 import RatingBar from "../../components/RatingBar";
 
 const Container = styled.div`
-  padding-right: 48px;
+  padding-right: 32px;
   margin-top: 45px;
 `;
 

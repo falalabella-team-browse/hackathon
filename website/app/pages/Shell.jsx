@@ -8,39 +8,39 @@ import ProductLanding from './Product/ProductLanding';
 
 
 const Shell = () => {
-  const [isLoaded, setLoaded] = useState(true);
-  const { user, logout, updateUser } = useUserContext();
+  // const [isLoaded, setLoaded] = useState(true);
+  // const { user, logout, updateUser } = useUserContext();
 
-  const history = useHistory();
-  const location = useLocation();
+  // const history = useHistory();
+  // const location = useLocation();
 
-  useEffect(() => {
-    http.validate().then((res) => {
-      let isLoggedIn = false;
+  // useEffect(() => {
+  //   http.validate().then((res) => {
+  //     let isLoggedIn = false;
 
-      if (res.success) {
-        isLoggedIn = true;
-      }
+  //     if (res.success) {
+  //       isLoggedIn = true;
+  //     }
 
-      if (
-        !isLoggedIn &&
-        location.pathname !== "/login" &&
-        location.pathname !== "/register"
-      ) {
-        history.replace("/login");
-      }
+  //     if (
+  //       !isLoggedIn &&
+  //       location.pathname !== "/login" &&
+  //       location.pathname !== "/register"
+  //     ) {
+  //       history.replace("/login");
+  //     }
 
-      if (
-        isLoggedIn &&
-        (location.pathname === "/login" || location.pathname === "/register")
-      ) {
-        history.replace("/");
-      }
+  //     if (
+  //       isLoggedIn &&
+  //       (location.pathname === "/login" || location.pathname === "/register")
+  //     ) {
+  //       history.replace("/");
+  //     }
 
-      updateUser({ isLoggedIn });
-      setLoaded(false);
-    });
-  }, [history, location]);
+  //     updateUser({ isLoggedIn });
+  //     setLoaded(false);
+  //   });
+  // }, [history, location]);
 
 
   return(

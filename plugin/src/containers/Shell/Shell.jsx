@@ -26,7 +26,7 @@ const RatingButtonContainer = styled.div`
 
 const ContentContainer = styled.div`
   display: grid;
-  grid-template-columns: 40% 60%;
+  grid-template-columns: 30% 70%;
   margin-top: 45px;
 `;
 

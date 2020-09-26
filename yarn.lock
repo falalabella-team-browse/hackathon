@@ -18,7 +18,7 @@
     invariant "^2.2.4"
     semver "^5.5.0"
 
-"@babel/core@^7.4.4", "@babel/core@^7.7.5", "@babel/core@^7.9.0":
+"@babel/core@^7.11.6", "@babel/core@^7.4.4", "@babel/core@^7.7.5", "@babel/core@^7.9.0":
   version "7.11.6"
   resolved "https://registry.yarnpkg.com/@babel/core/-/core-7.11.6.tgz#3a9455dc7387ff1bac45770650bc13ba04a15651"
   integrity sha512-Wpcv03AGnmkgm6uS6k8iwhIwTrcP0m17TL1n1sy7qD0qelDu4XNeW0dN0mHfa+Gei211yDaLoEe/VlbXQzM4Bg==
@@ -1492,7 +1492,7 @@ babel-plugin-dynamic-import-node@^2.3.3:
   dependencies:
     object.assign "^4.1.0"
 
-"babel-plugin-styled-components@>= 1":
+"babel-plugin-styled-components@>= 1", babel-plugin-styled-components@^1.11.1:
   version "1.11.1"
   resolved "https://registry.yarnpkg.com/babel-plugin-styled-components/-/babel-plugin-styled-components-1.11.1.tgz#5296a9e557d736c3186be079fff27c6665d63d76"
   integrity sha512-YwrInHyKUk1PU3avIRdiLyCpM++18Rs1NgyMXEAQC33rIXs/vro0A+stf4sT0Gf22Got+xRWB8Cm0tw+qkRzBA==
@@ -4248,6 +4248,11 @@ lines-and-columns@^1.1.6:
   resolved "https://registry.yarnpkg.com/lines-and-columns/-/lines-and-columns-1.1.6.tgz#1c00c743b433cd0a4e80758f7b64a57440d9ff00"
   integrity sha1-HADHQ7QzzQpOgHWPe2SldEDZ/wA=
 
+loadash@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/loadash/-/loadash-1.0.0.tgz#b92e54d809f3c225f4f9a9cfbaeae5b56de1ca9f"
+  integrity sha512-xlX5HBsXB3KG0FJbJJG/3kYWCfsCyCSus3T+uHVu6QL6YxAdggmm3QeyLgn54N2yi5/UE6xxL5ZWJAAiHzHYEg==
+
 lodash-es@^4.17.15:
   version "4.17.15"
   resolved "https://registry.yarnpkg.com/lodash-es/-/lodash-es-4.17.15.tgz#21bd96839354412f23d7a10340e5eac6ee455d78"
@@ -4308,7 +4313,7 @@ lodash.uniq@^4.5.0:
   resolved "https://registry.yarnpkg.com/lodash.uniq/-/lodash.uniq-4.5.0.tgz#d0225373aeb652adc1bc82e4945339a842754773"
   integrity sha1-0CJTc662Uq3BvILklFM5qEJ1R3M=
 
-lodash@^4.17.11, lodash@^4.17.15, lodash@^4.17.19, lodash@^4.17.4:
+lodash@^4.17.11, lodash@^4.17.15, lodash@^4.17.19, lodash@^4.17.20, lodash@^4.17.4:
   version "4.17.20"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.20.tgz#b44a9b6297bcb698f1c51a3545a2b3b368d59c52"
   integrity sha512-PlhdFcillOINfeV7Ni6oF1TAEayyZBoZ8bcshTHqOYJYlrqzRK5hagpagky5o4HfCzzd1TRkXPMFq6cKk9rGmA==
@@ -4451,6 +4456,11 @@ mime@1.6.0:
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/mime/-/mime-1.6.0.tgz#32cd9e5c64553bd58d19a568af452acff04981b1"
   integrity sha512-x0Vn8spI+wuJ1O6S7gnbaQg8Pxh4NNHb7KSINmEWKiPE4RKOplvijn+NkmYmmRgP68mc70j2EbeTFRsrswaQeg==
+
+mime@^2.4.6:
+  version "2.4.6"
+  resolved "https://registry.yarnpkg.com/mime/-/mime-2.4.6.tgz#e5b407c90db442f2beb5b162373d07b69affa4d1"
+  integrity sha512-RZKhC3EmpBchfTGBVb8fb+RL2cWyw/32lshnsETttkBAyAUXSGHxbEJWWRXc751DrIxG1q04b8QwMbAwkRPpUA==
 
 mimic-fn@^1.0.0:
   version "1.2.0"

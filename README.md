@@ -122,13 +122,20 @@ yarn workspace website add <list-of-package>
 4. Remove/Delete review
    
    ```
-      (delete) : 'api/v1/ratingsAndReviews/{id}'
+      (delete) : 'api/v1/ratingsAndReviews/{reviewId}'
    ```
 
 5. Get Review with Id
    
    ```
-      (get) : 'api/v1/ratingsAndReviews/{id}'
+      (get) : 'api/v1/ratingsAndReviews/{reviewId}'
+      
+   ```
+
+6. Get averageRatings
+   
+   ```
+      (get) : 'api/v1/averageRatings/{entityid}'
       
    ```
 
