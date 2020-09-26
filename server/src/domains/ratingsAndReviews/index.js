@@ -243,6 +243,7 @@ const averageRatings = fastify => async (req, reply) => {
 	};
 	const reqBody = {
 		_source: false,
+		size: 0,
 		query: {
 			bool: {
 				must: [
@@ -253,8 +254,6 @@ const averageRatings = fastify => async (req, reply) => {
 							},
 						},
 					},
-				],
-				must: [
 					{
 						term: {
 							reviewStatus: {
