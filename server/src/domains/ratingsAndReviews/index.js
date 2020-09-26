@@ -2,6 +2,12 @@ const constants = require('../../configs/constants');
 const get = require('lodash/get');
 const moduleController = require('../../modules/controllers');
 
+const defaultSort = {
+	rating: 'desc',
+	created_date: 'desc',
+	helpful_count: 'desc',
+};
+
 const handleResponse = (response, reply) => {
 	if (response && response.error) {
 		reply.code(response.status || 500).send({
@@ -299,21 +305,40 @@ const averageRatings = fastify => async (req, reply) => {
 };
 
 const searchRatings = fastify => async (req, reply) => {
-	const { pageNo = 0, entityId } = req.body;
+	const {
+		sort = 'rating_desc',
+		verifiedPurchase = false,
+		pageNo = 0,
+		entityId = '',
+		reviewStatus = 'Published',
+	} = req.query;
 	const headers = {
 		Authorization: 'Basic ZWxhc3RpYzptRG9HTFA1VmNuU3poNEVWeU4wek1FV0o=',
 	};
 	const url = constants.SEARCH_URL;
-
+	const filters = {
+		verifiedPurchase,
+		entityId,
+		reviewStatus,
+	};
+	const mustMatch = Object.keys(filters)
+		.filter(key => filters[key])
+		.map(dt => {
+			return { term: { [dt]: { value: filters[dt] } } };
+		});
+	const sortSplit = sort.split('_');
+	const sortBy = {
+		[sortSplit[0]]: sortSplit[1],
+	};
 	const reqBody = {
 		from: pageNo * constants.PAGE_SIZE,
 		size: constants.PAGE_SIZE,
-		size: 100,
 		query: {
-			match: {
-				entityId: entityId,
+			bool: {
+				must: mustMatch,
 			},
 		},
+		sort: [sortBy],
 	};
 
 	const response = await fastify.restClient.post(url, reqBody, headers);
@@ -325,15 +350,17 @@ const searchRatings = fastify => async (req, reply) => {
 		return;
 	}
 
-	if (response.hits && response.hits.hits) {
-		handleResponse(response, reply);
+	if (!(response.hits && response.hits.hits)) {
+		return handleResponse({}, reply);
 	}
-	return handleResponse({}, reply);
+
+	const results = response.hits;
+	handleResponse(results, reply);
 };
 
 module.exports = async fastify => {
-	fastify.post('/ratingsAndReviews', searchRatings(fastify));
-	fastify.post('/ratingsAndReviews/create', postHandler(fastify));
+	fastify.get('/ratingsAndReviews', searchRatings(fastify));
+	fastify.post('/ratingsAndReviews', postHandler(fastify));
 	fastify.post('/ratingsAndReviews/flag', markHelpFul(fastify));
 	fastify.post('/ratingsAndReviews/edit', editHandler(fastify));
 	fastify.get('/ratingsAndReviews/:id', getHandler(fastify));
