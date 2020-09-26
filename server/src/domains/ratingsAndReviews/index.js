@@ -31,6 +31,10 @@ const postHandler = fastify => async (req, reply) => {
     if(rating < 1 || rating > 5){
         badRequest(400, reply, "Invalid Rating")
     }
+
+    if(title.length > 120){
+        badRequest(400, reply, "Invalid Title")
+    }
     
     const headers = {
         "Authorization": "Basic ZWxhc3RpYzptRG9HTFA1VmNuU3poNEVWeU4wek1FV0o="
@@ -81,6 +85,10 @@ const editHandler = fastify => async (req, reply) => {
 
     if(rating < 1 || rating > 5){
         badRequest(400, reply)
+    }
+
+    if(title.length > 120){
+        badRequest(400, reply, "Invalid Title")
     }
     
     const headers = {
