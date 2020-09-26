@@ -42,9 +42,16 @@ const getAllReviews = async (entityId, pageNo, sort) => {
   );
 };
 
+const getAggregatedDetails = async (entityId) => {
+  return safeFetch(`${getBasePath()}/api/v1/averageRatings/${entityId}`, {
+    method: "GET",
+  });
+};
+
 const http = {
   addNewReview,
   getAllReviews,
+  getAggregatedDetails,
 };
 
 export default http;
