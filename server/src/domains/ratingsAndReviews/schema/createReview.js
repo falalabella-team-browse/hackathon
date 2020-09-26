@@ -75,6 +75,4 @@ const createReviewSchema =  {
 	}
  }
 
-
-
 module.exports = createReviewSchema

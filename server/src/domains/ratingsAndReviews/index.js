@@ -414,9 +414,11 @@ const searchRatings = fastify => async (req, reply) => {
 		entityId = '',
 		reviewStatus = 'Published',
 	} = req.query;
+
 	const headers = {
 		Authorization: 'Basic ZWxhc3RpYzptRG9HTFA1VmNuU3poNEVWeU4wek1FV0o=',
 	};
+
 	const url = constants.SEARCH_URL;
 	const filters = {
 		verifiedPurchase,
@@ -471,14 +473,15 @@ const searchRatings = fastify => async (req, reply) => {
 	handleResponse(results, reply);
 };
 
+
 module.exports = async fastify => {
 	fastify.post('/ratingsAndReviews', apiSchemas.createReviewSchema , postHandler(fastify));
 	fastify.post('/ratingsAndReviews/flag', apiSchemas.flagReviewSchema, markHelpFul(fastify));
 	fastify.post('/ratingsAndReviews/edit', apiSchemas.editReviewSchema,  editHandler(fastify));
 	fastify.post('/ratingsAndReviews/updateStatus', apiSchemas.updateReviewSchema, updateStatus(fastify));
-	fastify.get('/ratingsAndReviews', searchRatings(fastify));
-	fastify.get('/ratingsAndReviews/:id', getHandler(fastify));
-	fastify.get('/averageRatings/:id', averageRatings(fastify, 'average'));
-	fastify.get('/analytics/:id', averageRatings(fastify, 'analytics'));
+	fastify.get('/ratingsAndReviews', apiSchemas.getReviews, searchRatings(fastify));
+	fastify.get('/ratingsAndReviews/:id', apiSchemas.getReviewById, getHandler(fastify));
+	fastify.get('/averageRatings/:id', apiSchemas.aggregation, averageRatings(fastify, 'average'));
+	fastify.get('/analytics/:id', apiSchemas.analytics, averageRatings(fastify, 'analytics'));
 	fastify.get('/histogram/:id', histogram(fastify));
 };
