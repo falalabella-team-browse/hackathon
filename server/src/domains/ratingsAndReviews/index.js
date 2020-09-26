@@ -299,11 +299,39 @@ const averageRatings = fastify => async (req, reply) => {
 	});
 };
 
+const searchRatings = fastify => async (req, reply) => {
+	const { pageNo = 0 } = req.body;
+	const headers = {
+		Authorization: 'Basic ZWxhc3RpYzptRG9HTFA1VmNuU3poNEVWeU4wek1FV0o=',
+	};
+	const url = constants.SEARCH_URL;
+
+	const reqBody = {
+		from: pageNo * constants.PAGE_SIZE,
+		size: constants.PAGE_SIZE,
+	};
+
+	const response = await fastify.restClient.post(url, reqBody, headers);
+
+	if (response && response.error) {
+		reply.code(response.status || 500).send({
+			error: response.error,
+		});
+		return;
+	}
+
+	if (response.hits && response.hits.hits) {
+		handleResponse(response.hits.hits, reply);
+	}
+	return handleResponse({}, reply);
+};
+
 module.exports = async fastify => {
-	fastify.post('/ratingsAndReviews', postHandler(fastify));
+	fastify.post('/ratingsAndReviews', searchRatings(fastify));
+	fastify.post('/ratingsAndReviews/create', postHandler(fastify));
 	fastify.post('/ratingsAndReviews/flag', markHelpFul(fastify));
 	fastify.post('/ratingsAndReviews/edit', editHandler(fastify));
 	fastify.get('/ratingsAndReviews/:id', getHandler(fastify));
 	fastify.delete('/ratingsAndReviews/:id', deleteHandler(fastify));
-    fastify.get('/averageRatings/:id', averageRatings(fastify));
+	fastify.get('/averageRatings/:id', averageRatings(fastify));
 };

@@ -10,6 +10,7 @@ const constants = {
 		HAPPY: 4,
 		SUPER_HAPPY: 5,
 	},
+	PAGE_SIZE: 10,
 };
 
 module.exports = constants;
