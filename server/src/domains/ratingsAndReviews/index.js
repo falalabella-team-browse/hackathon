@@ -3,7 +3,13 @@ const get = require('lodash/get');
 const moduleController = require('../../modules/controllers');
 const verifiedPurchase = require('../../configs/verifiedPurchase.json');
 const getOverallRating = require('../utils');
-const { rangeBuckets, generateQuery, aggregator_Average, aggregator_Analytics, aggEnums } = require('./helper');
+const { 
+	generateQuery, 
+	aggregator_Average,
+	aggregator_Analytics,
+	aggEnums,
+	aggregator_Histogram
+} = require('./helper');
 var tokenize = require('../../modules/controllers/sentiment/tokenize');
 
 const handleResponse = (response, reply) => {
@@ -328,6 +334,57 @@ const averageRatings = (fastify, method = 'average') => async (req, reply) => {
 	});
 };
 
+const histogram = (fastify) => async (req, reply) => {
+	const { id } = req.params;
+
+	const headers = {
+		Authorization: 'Basic ZWxhc3RpYzptRG9HTFA1VmNuU3poNEVWeU4wek1FV0o=',
+	};
+
+	const reqBody = {
+		size: 0,
+		_source: false,
+		size: 0,
+		query: {
+			bool:  {
+				must: [generateQuery('entityId', id)],
+			},
+		},
+		aggs: aggregator_Histogram,
+	};
+
+	const response = await fastify.restClient.post(constants.SEARCH_URL, reqBody, headers);
+
+	if (response && response.error) {
+		reply.code(response.status || 500).send({
+			error: response.error,
+		});
+		return;
+	}
+
+	const totalNumberOfReviews = get(response, 'hits.total.value', 0);
+	const ratings = get(response, 'aggregations.rating_per_hour.buckets', []);
+	
+
+	const rating_per_hour = ratings.map(item => {
+		return {
+			date: item.key_as_string,
+			timestamp: item.key,
+			value: item.doc_count,
+			average:  item.rating_average.value
+		};
+	});
+
+	const schema = {
+		totalNumberOfReviews,
+		rating_per_hour,
+	};
+
+	return reply.code(200).send({
+		...schema,
+	});
+};
+
 const searchRatings = fastify => async (req, reply) => {
 	const {
 		sort = 'rating_desc',
@@ -402,4 +459,5 @@ module.exports = async fastify => {
 	fastify.post('/ratingsAndReviews/updateStatus', updateStatus(fastify));
 	fastify.get('/averageRatings/:id', averageRatings(fastify, 'average'));
 	fastify.get('/analytics/:id', averageRatings(fastify, 'analytics'));
+	fastify.get('/histogram/:id', histogram(fastify));
 };
