@@ -11,6 +11,12 @@ const constants = {
 		SUPER_HAPPY: 5,
 	},
 	PAGE_SIZE: 10,
+	RNR_SCORE: {
+		HFS_V: 5,
+		HFS_NV: 1,
+		WS_V: 2,
+		WS_NV: 0.5,
+	},
 };
 
 module.exports = constants;

@@ -3,6 +3,7 @@ const get = require('lodash/get');
 const moduleController = require('../../modules/controllers');
 const verifiedPurchase = require('../../configs/verifiedPurchase.json');
 const getOverallRating = require('../utils');
+var tokenize = require('../../modules/controllers/sentiment/tokenize');
 
 const handleResponse = (response, reply) => {
 	if (response && response.error) {
@@ -62,6 +63,7 @@ const postHandler = fastify => async (req, reply) => {
 		verifiedPurchase: isverifiedPurchase,
 		rating,
 		sentimentScore: sentiment,
+		helpful_count: 0,
 	});
 	const reqBody = {
 		entityId,
@@ -161,13 +163,8 @@ const getHandler = fastify => async (req, reply) => {
 	const { _source, _id } = response;
 
 	const schema = {
-		reviewId: _id,
-		author: _source.author,
-		entityId: _source.entityId,
-		title: _source.title,
-		description: _source.description,
-		rating: _source.rating,
-		reviewStatus: _source.reviewStatus,
+		id: _id,
+		..._source,
 	};
 
 	return reply.code(200).send({
@@ -202,8 +199,15 @@ const updateStatus = fastify => async (req, reply) => {
 };
 
 const markHelpFul = fastify => async (req, reply) => {
-	const { id, helpful_count } = req.body;
-
+	const { id, helpful_count, verifiedPurchase, rating, sentiment, title, description } = req.body;
+	var { noOfWords } = tokenize(title + description);
+	const review_score = getOverallRating({
+		count: noOfWords,
+		verifiedPurchase,
+		rating,
+		sentimentScore: sentiment,
+		helpful_count,
+	});
 	const headers = {
 		Authorization: 'Basic ZWxhc3RpYzptRG9HTFA1VmNuU3poNEVWeU4wek1FV0o=',
 	};
@@ -211,6 +215,7 @@ const markHelpFul = fastify => async (req, reply) => {
 	const reqBody = {
 		doc: {
 			helpful_count,
+			review_score,
 		},
 	};
 

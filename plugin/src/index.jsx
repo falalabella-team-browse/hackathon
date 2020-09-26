@@ -14,12 +14,12 @@ const load = (element, user) => {
 
 if (process.env.NODE_ENV !== "production") {
   window.RNR = {
-    basePath: "https://hack.rlab.app",
-    // basePath: "http://localhost:3000",
+    // basePath: "https://hack.rlab.app",
+    basePath: "http://localhost:3000",
   };
   load(document.getElementById("reviews"), {
     userId: "12",
-    productId: "prod1234",
+    productId: "929",
   });
 } else {
   window.RNR = {
