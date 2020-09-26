@@ -1,0 +1,7 @@
+version: "3.0"
+services:
+  application:
+    build: .
+    ports:
+      - "80:3000"
+    restart: always
