@@ -3,6 +3,7 @@ const get = require('lodash/get');
 const moduleController = require('../../modules/controllers');
 const verifiedPurchase = require('../../configs/verifiedPurchase.json');
 const getOverallRating = require('../utils');
+const { rangeBuckets, generateQuery, aggregator_Average, aggregator_Analytics, aggEnums } = require('./helper');
 var tokenize = require('../../modules/controllers/sentiment/tokenize');
 
 const handleResponse = (response, reply) => {
@@ -236,68 +237,37 @@ const markHelpFul = fastify => async (req, reply) => {
 	handleResponse(response, reply);
 };
 
-const averageRatings = fastify => async (req, reply) => {
+const averageRatings = (fastify, method = 'average') => async (req, reply) => {
 	const { id } = req.params;
+
 	const headers = {
 		Authorization: 'Basic ZWxhc3RpYzptRG9HTFA1VmNuU3poNEVWeU4wek1FV0o=',
 	};
+
+	const {
+		entityType = 'sku',
+	} = req.query;
+
+	const queryLabel = entityType === 'author' ?  'author' : 'entityId';
+
+	const queryForAverage = {
+		must: [ generateQuery('entityId', id), generateQuery('reviewStatus', 'Published') ],
+	};
+
+	const queryForAnalytics = {
+		must: [ generateQuery(queryLabel, id) ],
+	}
+
+	const aggregator =  method === 'analytics' ? aggregator_Analytics : aggregator_Average; 
+
 	const reqBody = {
+		size:0,
 		_source: false,
 		size: 0,
 		query: {
-			bool: {
-				must: [
-					{
-						term: {
-							entityId: {
-								value: id,
-							},
-						},
-					},
-					{
-						term: {
-							reviewStatus: {
-								value: 'Published',
-							},
-						},
-					},
-				],
-			},
+			bool: method === 'analytics' ? queryForAnalytics : queryForAverage,
 		},
-		aggs: {
-			avg_rating: {
-				avg: {
-					field: 'rating',
-				},
-			},
-			rating_buckets: {
-				range: {
-					field: 'rating',
-					ranges: [
-						{
-							from: 0.0,
-							to: 1.01,
-						},
-						{
-							from: 1.0,
-							to: 2.01,
-						},
-						{
-							from: 2.0,
-							to: 3.01,
-						},
-						{
-							from: 3.0,
-							to: 4.01,
-						},
-						{
-							from: 4.0,
-							to: 5.01,
-						},
-					],
-				},
-			},
-		},
+		aggs: aggregator,
 	};
 
 	const response = await fastify.restClient.post(constants.SEARCH_URL, reqBody, headers);
@@ -309,20 +279,22 @@ const averageRatings = fastify => async (req, reply) => {
 		return;
 	}
 
-	const enums = {
-		'0.0-1.01': '1',
-		'1.0-2.01': '2',
-		'2.0-3.01': '3',
-		'3.0-4.01': '4',
-		'4.0-5.01': '5',
-	};
-
 	const totalNumberOfReviews = get(response, 'hits.total.value', 0);
 	const averageRating = get(response, 'aggregations.avg_rating.value', 0);
 	const buckets = get(response, 'aggregations.rating_buckets.buckets', []);
+	const sentiments = get(response, 'aggregations.sentiment_buckets.buckets', []);
+	const review_status = get(response, 'aggregations.review_status.buckets', []);
+
+	const sentiment_buckets = sentiments.map(bkt => {
+		return {
+			key: aggEnums[`${bkt.key}`],
+			value: bkt.doc_count,
+		};
+	});
+
 	const rating_buckets = buckets.map(bkt => {
 		return {
-			key: enums[`${bkt.key}`],
+			key: aggEnums[`${bkt.key}`],
 			value: bkt.doc_count,
 		};
 	});
@@ -332,6 +304,11 @@ const averageRatings = fastify => async (req, reply) => {
 		averageRating,
 		rating_buckets,
 	};
+
+	if(method === 'analytics'){
+		schema['sentiment_buckets'] = sentiment_buckets;
+		schema['review_status'] = review_status;
+	}
 
 	return reply.code(200).send({
 		...schema,
@@ -410,5 +387,6 @@ module.exports = async fastify => {
 	fastify.post('/ratingsAndReviews/edit', editHandler(fastify));
 	fastify.get('/ratingsAndReviews/:id', getHandler(fastify));
 	fastify.post('/ratingsAndReviews/updateStatus', updateStatus(fastify));
-	fastify.get('/averageRatings/:id', averageRatings(fastify));
+	fastify.get('/averageRatings/:id', averageRatings(fastify, 'average'));
+	fastify.get('/analytics/:id', averageRatings(fastify, 'analytics'));
 };
