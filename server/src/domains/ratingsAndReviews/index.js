@@ -26,8 +26,6 @@ const badRequest = (code = 400, reply, msg = 'Bad Request') => {
 const postHandler = fastify => async (req, reply) => {
 	const { entityId, rating = 0, title = '', description = '', author = '' } = req.body;
 
-	// sentiment analysis to go here
-
 	if (rating < 1 || rating > 5) {
 		badRequest(400, reply, 'Invalid Rating');
 	}
@@ -44,6 +42,7 @@ const postHandler = fastify => async (req, reply) => {
 		badRequest(400, reply, 'Mandatory : entityId ');
 	}
 
+	// sentiment analysis
 	const rawComment = title + description;
 
 	const sentimentData = moduleController.sentiment().analyse({ phrase: rawComment, languageCode: 'en' });
@@ -300,7 +299,7 @@ const averageRatings = fastify => async (req, reply) => {
 };
 
 const searchRatings = fastify => async (req, reply) => {
-	const { pageNo = 0 } = req.body;
+	const { pageNo = 0, entityId } = req.body;
 	const headers = {
 		Authorization: 'Basic ZWxhc3RpYzptRG9HTFA1VmNuU3poNEVWeU4wek1FV0o=',
 	};
@@ -309,6 +308,12 @@ const searchRatings = fastify => async (req, reply) => {
 	const reqBody = {
 		from: pageNo * constants.PAGE_SIZE,
 		size: constants.PAGE_SIZE,
+		size: 100,
+		query: {
+			match: {
+				entityId: entityId,
+			},
+		},
 	};
 
 	const response = await fastify.restClient.post(url, reqBody, headers);
@@ -321,7 +326,7 @@ const searchRatings = fastify => async (req, reply) => {
 	}
 
 	if (response.hits && response.hits.hits) {
-		handleResponse(response.hits.hits, reply);
+		handleResponse(response, reply);
 	}
 	return handleResponse({}, reply);
 };
