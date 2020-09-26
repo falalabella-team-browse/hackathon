@@ -214,6 +214,7 @@ const averageRatings = fastify => async (req, reply) => {
 		Authorization: 'Basic ZWxhc3RpYzptRG9HTFA1VmNuU3poNEVWeU4wek1FV0o=',
 	};
 	const reqBody = {
+		_source:false,
 		query: {
 			bool: {
 				must: [
