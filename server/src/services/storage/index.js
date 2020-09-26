@@ -5,6 +5,10 @@ const mime = require("mime");
 const { v4: uuidv4 } = require("uuid");
 
 const saveImage = (baseDir) => (data) => {
+  if (!data.startsWith("data")) {
+    return data;
+  }
+
   const index = data.indexOf(",");
   const buffer = Buffer.from(data.substring(index), "base64");
   const type = data.substring(5, data.indexOf(";"));

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { FilledButton } from "../../components/Button";
 import CircularLoader from "../../components/CircluarLoader";
@@ -64,7 +64,7 @@ const VIEW_BLOCKED = "Blocked";
 const VIEW_LOADED = "Loaded";
 const VIEW_SUCCESS = "Success";
 
-const ReviewForm = ({ onClose, onChange }) => {
+const ReviewForm = ({ onClose, onChange, edit, value }) => {
   const [view, setView] = useState(VIEW_LOADED);
   const [error, setError] = useState("");
   const [images, setImages] = useState([]);
@@ -74,6 +74,7 @@ const ReviewForm = ({ onClose, onChange }) => {
     rating: 0,
     title: "",
     content: "",
+    id: "",
   });
 
   const handleChange = (key) => (e) => {
@@ -82,6 +83,19 @@ const ReviewForm = ({ onClose, onChange }) => {
       [key]: e.target.value,
     });
   };
+
+  useEffect(() => {
+    if (value) {
+      setData({
+        id: value.id,
+        rating: value.rating,
+        title: value.title,
+        content: value.description,
+      });
+
+      setImages(value.imageLink.filter(Boolean));
+    }
+  }, [value]);
 
   const onSubmit = () => {
     setError("");
@@ -105,15 +119,24 @@ const ReviewForm = ({ onClose, onChange }) => {
 
     setView(VIEW_LOADING);
 
-    http
-      .addNewReview(
-        user.productId,
-        data.rating,
-        data.title,
-        user.userId,
-        data.content,
-        images
-      )
+    const promise = edit
+      ? http.updateReview(
+          data.id,
+          data.rating,
+          data.title,
+          data.content,
+          images
+        )
+      : http.addNewReview(
+          user.productId,
+          data.rating,
+          data.title,
+          user.userId,
+          data.content,
+          images
+        );
+
+    promise
       .then((res) => {
         if (!res.success) {
           setView(VIEW_ERROR);
@@ -161,7 +184,9 @@ const ReviewForm = ({ onClose, onChange }) => {
             <Close />
           </ModalCloseButton>
           <DoneIcon />
-          <STATUS_TEXT>Thanks for your review</STATUS_TEXT>
+          <STATUS_TEXT>
+            {edit ? "Your review has been updated" : "Thanks for your review"}
+          </STATUS_TEXT>
         </STATUS_CONTAINER>
       );
     case VIEW_BLOCKED:
