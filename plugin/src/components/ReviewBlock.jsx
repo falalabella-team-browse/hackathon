@@ -9,6 +9,7 @@ import http from "../http";
 import ImageViewer from "./ImageViewer";
 import Modal from "./Modal";
 import ReviewForm from "../containers/Form/Form";
+import { useUser } from "../Context/UserContext";
 
 const Container = styled.div`
   border: 1px solid #e8e8e8;
@@ -104,6 +105,10 @@ const ReviewBlock = ({ review, onChange }) => {
     imageLink,
     sentiment,
   } = review;
+
+  const user = useUser();
+
+  const showEditActions = user.userId === id;
 
   const [expanded, setExpanded] = useState(false);
   // const [useFul, setUseFul] = useState(false);
@@ -206,19 +211,21 @@ const ReviewBlock = ({ review, onChange }) => {
           )}
         </Helpful>
       </Actions>
-      <Actions>
-        <ActionFilledButton onClick={handleEditButtonClicked}>
-          Edit
-        </ActionFilledButton>
-        <ActionFilledButton
-          onClick={handleDeleteButtonClicked}
-          danger={confirmDelete}
-        >
-          {confirmDelete === 0 && "Delete"}
-          {confirmDelete === -1 && "Click again to delete"}
-          {confirmDelete === 1 && "Deleting..."}
-        </ActionFilledButton>
-      </Actions>
+      {showEditActions && (
+        <Actions>
+          <ActionFilledButton onClick={handleEditButtonClicked}>
+            Edit
+          </ActionFilledButton>
+          <ActionFilledButton
+            onClick={handleDeleteButtonClicked}
+            danger={confirmDelete}
+          >
+            {confirmDelete === 0 && "Delete"}
+            {confirmDelete === -1 && "Click again to delete"}
+            {confirmDelete === 1 && "Deleting..."}
+          </ActionFilledButton>
+        </Actions>
+      )}
       {showEditModal && (
         <Modal>
           <ReviewForm
