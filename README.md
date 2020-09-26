@@ -21,6 +21,7 @@ yarn workspace website install
 ```
 
 ### Build Plugin
+
 ```
 yarn workspace plugin build
 ```
@@ -75,28 +76,31 @@ yarn workspace website add <list-of-package>
 
 `pages` - Root pages
 
-
-
 ### Load Review & Ratings Plugins
 
 1. Insert Script in HTML
+
 ```html
 <script src="<path-to-script>/rnr-script.js"></script>
 ```
 
 2. Load ratings module
+
 ```html
 <script>
-    const element = document.getElementById("reviews");
-    RNR.load(reviews);
+  const element = document.getElementById("reviews");
+  RNR.setHost("api-server-host");
+  RNR.load(element, {
+    userId: "user-id",
+    productId: "product-id",
+  });
 </script>
 ```
-
 
 ### Review n Ratings APIS
 
 1. Create new review
-   
+
    ```
       (post) : 'api/v1/ratingsAndReviews'
       (reqBody) : { entityId, rating , title,  description, author}
@@ -104,38 +108,37 @@ yarn workspace website add <list-of-package>
    ```
 
 2. Edit review
-   
+
    ```
       (post) : 'api/v1/ratingsAndReviews/edit'
       (reqBody) : { id, rating , title,  description}
-      
+
    ```
 
 3. Mark review as Helpfull
-   
+
    ```
       (post) : 'api/v1/ratingsAndReviews/flag'
       (reqBody) : { id, helpful_count}
-      
+
    ```
 
 4. Remove/Delete review
-   
+
    ```
       (delete) : 'api/v1/ratingsAndReviews/{reviewId}'
    ```
 
 5. Get Review with Id
-   
+
    ```
       (get) : 'api/v1/ratingsAndReviews/{reviewId}'
-      
+
    ```
 
 6. Get averageRatings
-   
+
    ```
       (get) : 'api/v1/averageRatings/{entityid}'
-      
-   ```
 
+   ```

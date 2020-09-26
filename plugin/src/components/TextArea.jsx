@@ -9,8 +9,15 @@ const Input = styled.textarea`
   border-radius: 3px;
 `;
 
-const TextArea = ({ placeholder }) => {
-  return <Input rows="5 " placeholder={placeholder} />;
+const TextArea = ({ placeholder, onChange, value }) => {
+  return (
+    <Input
+      rows="5"
+      value={value}
+      onChange={onChange}
+      placeholder={placeholder}
+    ></Input>
+  );
 };
 
 export default TextArea;

@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import Star, { VIEW_FULL, VIEW_HALF, VIEW_EMPTY } from "./Star";
 
 const MAX_RATING = 5;
-const Container = styled.div``;
+const Container = styled.div`
+  cursor: ${(prop) => (prop.editable ? "pointer" : "auto")};
+`;
 
 const getViews = (rating) => {
   return Array(MAX_RATING)
@@ -21,13 +23,33 @@ const getViews = (rating) => {
     });
 };
 
-const RatingView = ({ rating, size }) => {
-  const views = getViews(rating);
+const RatingView = ({
+  rating,
+  size,
+  editable = false,
+  onChange,
+  gap = { gap },
+}) => {
+  const [views, setViews] = useState(getViews(rating));
+
+  const handleOnClick = (i) => () => {
+    if (editable) {
+      setViews(getViews(i));
+      onChange(i);
+    }
+  };
 
   return (
-    <Container>
+    <Container editable={editable}>
       {views.map((v, i) => (
-        <Star height={size} width={size} key={i} view={v} />
+        <Star
+          height={size}
+          width={size}
+          key={i}
+          view={v}
+          gap={gap}
+          onClick={handleOnClick(i + 1)}
+        />
       ))}
     </Container>
   );

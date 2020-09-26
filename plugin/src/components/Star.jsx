@@ -4,34 +4,44 @@ const VIEW_FULL = "FULL";
 const VIEW_HALF = "HALF";
 const VIEW_EMPTY = "EMPTY";
 
-const getStyle = (view) => {
+const getStyle = (view, gap) => {
   switch (view) {
     case VIEW_EMPTY: {
       return {
         fill: "#e7e7e7",
+        margin: `0 ${gap}px`,
       };
     }
     case VIEW_HALF: {
       return {
         fill: "url(#half_grad)",
+        margin: `0 ${gap}px`,
       };
     }
     default: {
       return {
         fill: "#ffc107",
+        margin: `0 ${gap}px`,
       };
     }
   }
 };
 
-const Star = ({ width = 25, height = 25, view = VIEW_FULL }) => {
+const Star = ({
+  width = 25,
+  height = 25,
+  view = VIEW_FULL,
+  onClick = () => {},
+  gap = 0,
+}) => {
   return (
     <svg
       height={height}
       viewBox="0 -10 511.98685 511"
       width={width}
       xmlns="http://www.w3.org/2000/svg"
-      style={getStyle(view)}
+      style={getStyle(view, gap)}
+      onClick={onClick}
     >
       <defs>
         <linearGradient id="half_grad">

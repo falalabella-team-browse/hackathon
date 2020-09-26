@@ -172,7 +172,12 @@ const AddToCartButton = styled.button`
 const ProductLanding = () => {
   useEffect(() => {
     const element = document.getElementById("reviews");
-    RNR.load(element);
+
+    RNR.setHost(process.env.BASE_URL);
+    RNR.load(element, {
+      userId: "12",
+      productId: "prod1234",
+    });
   });
 
   return (

@@ -34,7 +34,6 @@ const AppShell = () => {
   const [showModal, setShowModal] = useState(false);
 
   const handleCreateModal = () => {
-    console.log("called");
     setShowModal(true);
   };
 
