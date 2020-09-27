@@ -28,6 +28,88 @@ const badRequest = (code = 400, reply, msg = 'Bad Request') => {
 	});
 };
 
+const getSortByRelevancyQuery = (id, from, size) => {
+	return(
+		{
+			"from": from,
+			"size": size,
+			"query":{
+			   "bool":{
+				  "must":[
+					 {
+						"term":{
+						   "entityId":{
+							  "value":`${id}`
+						   }
+						}
+					 },
+					 {
+						"term":{
+						   "reviewStatus":{
+							  "value":"Published"
+						   }
+						}
+					 }
+				  ],
+				  "should" : [
+					  {
+						"range" : {
+						   "modified_date" : {
+							  "boost" : 1000,
+							  "gte" : "now-30m"
+						   }
+						}
+					 },
+					 {
+						"range" : {
+						   "reviewScore" : {
+							  "boost" : 10,
+							  "gte" : "0"
+						   }
+						}
+					 }
+				  ],
+				  "boost":"0.1"
+			   }
+			},
+			"aggs":{
+			   "avg_rating":{
+				  "avg":{
+					 "field":"rating"
+				  }
+			   },
+			   "rating_buckets":{
+				  "range":{
+					 "field":"rating",
+					 "ranges":[
+						{
+						   "from":0,
+						   "to":1.01
+						},
+						{
+						   "from":1.01,
+						   "to":2.01
+						},
+						{
+						   "from":2.01,
+						   "to":3.01
+						},
+						{
+						   "from":3.01,
+						   "to":4.01
+						},
+						{
+						   "from":4.01,
+						   "to":5.01
+						}
+					 ]
+				  }
+			   }
+			}
+		 }
+	)
+};
+
 const postHandler = fastify => async (req, reply) => {
 	const { entityId, rating = 0, title = '', description = '', author = '', images = [] } = req.body;
 
@@ -445,9 +527,13 @@ const searchRatings = fastify => async (req, reply) => {
 	const sortBy = {
 		[sortSplit[0]]: sortSplit[1],
 	};
+
+	const from = pageNo * constants.PAGE_SIZE;
+	const size = constants.PAGE_SIZE;
+
 	const reqBody = {
-		from: pageNo * constants.PAGE_SIZE,
-		size: constants.PAGE_SIZE,
+		from,
+		size,
 		query: {
 			bool: {
 				must: mustMatch,
@@ -457,7 +543,9 @@ const searchRatings = fastify => async (req, reply) => {
 		aggs: aggregator_Average,
 	};
 
-	const response = await fastify.restClient.post(url, reqBody, headers);
+	const postReqBody =  sort === 'review_score:desc' && entityId ? getSortByRelevancyQuery(entityId, from, size) : reqBody;
+
+	const response = await fastify.restClient.post(url, postReqBody, headers);
 
 	if (response && response.error) {
 		reply.code(response.status || 500).send({
