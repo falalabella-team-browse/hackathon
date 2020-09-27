@@ -7,6 +7,8 @@ import PieChartGraph from '../../components/graphs';
 import { useHistory } from 'react-router-dom';
 import RatingBar from '../../components/RatingsBar/RatingsBar';
 import DonutChart from 'react-donut-chart';
+import { ResponsiveLine } from '@nivo/line'
+import { useParams } from "react-router-dom";
 
 const BodyWrapper = styled.div`
 	padding-bottom: 20px;
@@ -42,17 +44,31 @@ const MarginedDiv = styled.div`
 
 const ProductAnalytics = () => {
 	const [analyticsData, setAnalyticsData] = useState({});
+	const [histogramData, setHistogramData] = useState([]);
 	const [loading, setLoading] = useState(false);
 	const pageType = window.location.search.split('=')[1];
+	const { id: queryId } = useParams();
+
+	const getHistogramInfo = async () => {
+		const URL = `/histogram/${queryId}`;
+		const response = await restClients.getProductAnalytics(URL);
+		const rating = response.success && response.body && response.body.rating_per_hour ? response.body.rating_per_hour : []
+		response.success ? setHistogramData(rating) : setHistogramData({});
+		return;
+	};
 
 	const getAnalyticsInfo = async () => {
 		setLoading(true);
 		const URL = window.location.pathname + window.location.search;
 		const response = await restClients.getProductAnalytics(URL);
 		response.success ? setAnalyticsData(response.body) : setReviewList([]);
+		if(pageType == 'sku'){
+			await getHistogramInfo();
+		}
 		setLoading(false);
 		return;
 	};
+
 
 	useEffect(() => {
 		getAnalyticsInfo();
@@ -83,6 +99,27 @@ const ProductAnalytics = () => {
 			};
 		});
 	};
+
+	const formDataForColumn = (ratings = []) => {
+		const ratingsData = ratings.map(item => {
+			return {
+				"x": `${item.label}:00`,
+				"y": item.value
+			}
+		});
+
+		const chartData = [
+			{
+			  "id": "Hourly Rating For Product",
+			  "color": "hsl(303, 70%, 50%)",
+			  "data": ratingsData
+			}
+		];
+
+		return chartData
+	};
+
+	const lineChartData = formDataForColumn(histogramData);
 
 	const { rating_buckets, sentiment_buckets, review_status } = analyticsData;
 
@@ -142,6 +179,72 @@ const ProductAnalytics = () => {
 								loading && <span>Loading Status...</span>
 							)}
 						</MarginedDiv>
+						{pageType == 'sku' && histogramData.length > 0 &&
+							<MarginedDiv style={{minWidth:"50%"}}>
+							<ResponsiveLine
+									data={lineChartData}
+									margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
+									xScale={{ type: 'point' }}
+									yScale={{ type: 'linear', min: 'auto', max: 'auto', stacked: true, reverse: false }}
+									axisTop={null}
+									axisRight={null}
+									axisBottom={{
+										orient: 'bottom',
+										tickSize: 5,
+										tickPadding: 5,
+										tickRotation: 0,
+										legend: 'Time',
+										legendOffset: 36,
+										legendPosition: 'middle'
+									}}
+									axisLeft={{
+										orient: 'left',
+										tickSize: 5,
+										tickPadding: 5,
+										tickRotation: 0,
+										legend: 'No of Ratings',
+										legendOffset: -40,
+										legendPosition: 'middle'
+									}}
+									colors={{ scheme: 'nivo' }}
+									pointSize={10}
+									pointColor={{ theme: 'background' }}
+									pointBorderWidth={2}
+									pointBorderColor={{ from: 'serieColor' }}
+									pointLabel="y"
+									pointLabelYOffset={-12}
+									useMesh={true}
+									legends={[
+										{
+											anchor: 'bottom-right',
+											direction: 'column',
+											justify: false,
+											translateX: 100,
+											translateY: 0,
+											itemsSpacing: 0,
+											itemDirection: 'left-to-right',
+											itemWidth: 80,
+											itemHeight: 20,
+											itemOpacity: 0.75,
+											symbolSize: 12,
+											symbolShape: 'circle',
+											symbolBorderColor: 'rgba(0, 0, 0, .5)',
+											effects: [
+												{
+													on: 'hover',
+													style: {
+														itemBackground: 'rgba(0, 0, 0, .03)',
+														itemOpacity: 1
+													}
+												}
+											]
+										}
+									]}
+								/>
+							</MarginedDiv>
+						}
+					</GraphsGrid>
+					<GraphsGrid>
 					</GraphsGrid>
 					{loading && <FullScreenLoader />}
 				</ContentWrapper>
