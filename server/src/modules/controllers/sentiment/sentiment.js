@@ -39,9 +39,9 @@ const analyse = ({ phrase, opts = {}, languageCode = 'en', callback }) => {
 	var result = {
 		sentimentScore: score,
 		sentimentFactor: utils.getSentimentFactor(score),
-		tokens: tokens,
 		words: {
-			scanned: scanned.length,
+			tokens,
+			totalScanned: scanned.length,
 			positive,
 			negative,
 		},
