@@ -104,13 +104,13 @@ const ProductAnalytics = () => {
 		const ratingsData = ratings.map(item => {
 			return {
 				"x": `${item.label}:00`,
-				"y": item.value
+				"y": item.average || 0
 			}
 		});
 
 		const chartData = [
 			{
-			  "id": "Hourly Rating For Product",
+			  "id": "Hourly Rating",
 			  "color": "hsl(303, 70%, 50%)",
 			  "data": ratingsData
 			}
@@ -202,7 +202,7 @@ const ProductAnalytics = () => {
 										tickSize: 5,
 										tickPadding: 5,
 										tickRotation: 0,
-										legend: 'No of Ratings',
+										legend: 'Avg Rating',
 										legendOffset: -40,
 										legendPosition: 'middle'
 									}}
