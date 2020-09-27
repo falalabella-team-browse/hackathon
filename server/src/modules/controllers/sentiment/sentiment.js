@@ -2,7 +2,16 @@ var tokenize = require('./tokenize');
 const languageData = require('./language');
 const utils = require('./utils');
 
-const analyse = ({ phrase, opts = {}, languageCode = 'en', callback }) => {
+const analyse = ({
+	phrase,
+	opts = {},
+	languageCode = 'en',
+	callback,
+	verifiedPurchase = false,
+	rating = 1,
+	helpful_count = 0,
+	imageCount = 0,
+}) => {
 	if (typeof phrase === 'undefined') phrase = '';
 
 	var { negators, invertors, positors } = languageData[languageCode];
@@ -36,6 +45,15 @@ const analyse = ({ phrase, opts = {}, languageCode = 'en', callback }) => {
 		calculation.push(tokenScore);
 	}
 
+	const review_score = utils.getOverallRating({
+		count: noOfWords,
+		verifiedPurchase,
+		rating,
+		sentimentScore: score,
+		helpful_count,
+		imageCount,
+	});
+
 	var result = {
 		sentimentScore: score,
 		sentimentFactor: utils.getSentimentFactor(score),
@@ -46,7 +64,7 @@ const analyse = ({ phrase, opts = {}, languageCode = 'en', callback }) => {
 			negative,
 		},
 		hasAbusiveContent,
-		noOfWords,
+		review_score,
 	};
 
 	if (typeof callback === 'function') {

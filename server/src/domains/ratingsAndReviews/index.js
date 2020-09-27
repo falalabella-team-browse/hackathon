@@ -62,19 +62,21 @@ const postHandler = fastify => async (req, reply) => {
 	// sentiment analysis
 	const rawComment = title + description;
 
-	const sentimentData = moduleController.sentiment().analyse({ phrase: rawComment, languageCode: 'en' });
-	const sentiment = constants.SENTIMENT_FACTOR[sentimentData.sentimentFactor];
-	const isverifiedPurchase = [...(verifiedPurchase[author] || [])].includes(entityId);
-	const reviewStatus = sentimentData.hasAbusiveContent ? 'Abusive' : 'Published';
 	const ids = images.map(img => fastify.storage.saveImage(img));
 
-	const review_score = getOverallRating({
-		count: sentimentData.noOfWords,
-		verifiedPurchase: isverifiedPurchase,
+	const verifiedPurchase = [...(verifiedPurchase[author] || [])].includes(entityId);
+	const sentimentData = moduleController.sentiment().analyse({
+		phrase: rawComment,
+		languageCode: 'en',
+		verifiedPurchase,
 		rating,
-		sentimentScore: sentiment,
 		helpful_count: 0,
+		imageCount: ids.length,
 	});
+
+	const sentiment = constants.SENTIMENT_FACTOR[sentimentData.sentimentFactor];
+
+	const reviewStatus = sentimentData.hasAbusiveContent ? 'Abusive' : 'Published';
 
 	const reqBody = {
 		entityId,
@@ -84,12 +86,12 @@ const postHandler = fastify => async (req, reply) => {
 		author,
 		created_date: new Date(),
 		modified_date: new Date(),
-		verifiedPurchase: isverifiedPurchase,
+		verifiedPurchase,
 		helpful_count: 0,
 		imageLink: ids,
 		sentiment,
 		reviewStatus,
-		review_score,
+		review_score: sentimentData.review_score,
 	};
 
 	const response = await fastify.restClient.post(constants.CREAT_NEW_REVIEW_URL, reqBody, headers);
@@ -120,7 +122,7 @@ const postHandler = fastify => async (req, reply) => {
 };
 
 const editHandler = fastify => async (req, reply) => {
-	const { id, rating = 0, title = '', description = '', images = [] } = req.body;
+	const { id, rating = 0, title = '', description = '', images = [], author = '' } = req.body;
 
 	if (rating < 1 || rating > 5) {
 		badRequest(400, reply);
@@ -134,12 +136,21 @@ const editHandler = fastify => async (req, reply) => {
 		badRequest(400, reply, 'Only 5 images are allowed');
 	}
 
+	const verifiedPurchase = [...(verifiedPurchase[author] || [])].includes(id);
+
 	const headers = {
 		Authorization: 'Basic ZWxhc3RpYzptRG9HTFA1VmNuU3poNEVWeU4wek1FV0o=',
 	};
 	const rawComment = title + description;
 
-	const sentimentData = moduleController.sentiment().analyse({ phrase: rawComment, languageCode: 'en' });
+	const sentimentData = moduleController.sentiment().analyse({
+		phrase: rawComment,
+		languageCode: 'en',
+		verifiedPurchase,
+		rating,
+		helpful_count: 0,
+		imageCount: images.length,
+	});
 
 	const reviewStatus = sentimentData.hasAbusiveContent ? 'Abusive' : 'Published';
 
@@ -152,7 +163,9 @@ const editHandler = fastify => async (req, reply) => {
 			description,
 			modified_date: new Date(),
 			reviewStatus,
+			helpful_count: 0,
 			imageLink: ids,
+			review_score: sentimentData.review_score,
 		},
 	};
 
@@ -229,15 +242,17 @@ const updateStatus = fastify => async (req, reply) => {
 };
 
 const markHelpFul = fastify => async (req, reply) => {
-	const { id, helpful_count, verifiedPurchase, rating, sentiment, title, description } = req.body;
-	var { noOfWords } = tokenize(title + description);
-	const review_score = getOverallRating({
-		count: noOfWords,
+	const { id, helpful_count, verifiedPurchase, rating, sentiment, title, description, imageLink = [] } = req.body;
+
+	const sentimentData = moduleController.sentiment().analyse({
+		phrase: title + description,
+		languageCode: 'en',
 		verifiedPurchase,
 		rating,
-		sentimentScore: sentiment,
 		helpful_count,
+		imageCount: imageLink.length,
 	});
+
 	const headers = {
 		Authorization: 'Basic ZWxhc3RpYzptRG9HTFA1VmNuU3poNEVWeU4wek1FV0o=',
 	};
@@ -245,7 +260,7 @@ const markHelpFul = fastify => async (req, reply) => {
 	const reqBody = {
 		doc: {
 			helpful_count,
-			review_score,
+			review_score: sentimentData.review_score,
 		},
 	};
 

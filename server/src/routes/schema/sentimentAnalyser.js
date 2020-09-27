@@ -28,6 +28,14 @@ const analyserSchema = {
 						type: 'string',
 						description: 'Related sentiment Analysed',
 					},
+					hasAbusiveContent: {
+						type: 'boolean',
+						description: 'Indicated if it has wore than 2 abusive words',
+					},
+					review_score: {
+						type: 'number',
+						description: 'Calculated review score',
+					},
 					words: {
 						type: 'object',
 						description: '',
@@ -49,14 +57,6 @@ const analyserSchema = {
 								description: 'Number of words scanned',
 							},
 						},
-					},
-					hasAbusiveContent: {
-						type: 'boolean',
-						description: 'Indicated if it has wore than 2 abusive words',
-					},
-					noOfWords: {
-						type: 'number',
-						description: 'Total number of words scanned',
 					},
 				},
 			},
