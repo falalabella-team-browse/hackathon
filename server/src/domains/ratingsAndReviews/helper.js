@@ -37,6 +37,11 @@ const aggregator_Average = {
 			field: 'rating',
 		},
 	},
+	sentiment_rating:{
+		avg:{
+		   field:"sentiment"
+		}
+	},
 	rating_buckets: {
 		range: {
 			field: 'rating',

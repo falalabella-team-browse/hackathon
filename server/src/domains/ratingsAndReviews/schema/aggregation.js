@@ -19,11 +19,12 @@ const aggregation =  {
 			properties: {
 					"totalNumberOfReviews":{
 						"type":"integer",
-						"format":"int32"
 					},
 					"averageRating":{
 						"type":"string",
-						"format":"nullable"
+					},
+					"averageSentiment":{
+						"type":"string",
 					},
 					"rating_buckets":{
 						"type":"array",

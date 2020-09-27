@@ -407,6 +407,7 @@ const averageRatings = (fastify, method = 'average') => async (req, reply) => {
 	const buckets = get(response, 'aggregations.rating_buckets.buckets', []);
 	const sentiments = get(response, 'aggregations.sentiment_buckets.buckets', []);
 	const review = get(response, 'aggregations.review_status.buckets', []);
+	const averageSentiment = get(response, 'aggregations.sentiment_rating.value', 0);
 
 	const review_status = review.map(bkt => {
 		return {
@@ -433,6 +434,7 @@ const averageRatings = (fastify, method = 'average') => async (req, reply) => {
 		totalNumberOfReviews,
 		averageRating,
 		rating_buckets,
+		averageSentiment
 	};
 
 	if (method === 'analytics') {
