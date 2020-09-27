@@ -168,6 +168,9 @@ const histogram =  {
 								 "date":{
 										"type":"string"
 								 },
+								 "label":{
+									  "type":"string"
+								 },
 								 "timestamp":{
 										"type":"integer",
 										"format":"int64"

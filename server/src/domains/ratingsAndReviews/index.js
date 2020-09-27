@@ -396,9 +396,11 @@ const histogram = (fastify) => async (req, reply) => {
 	const ratings = get(response, 'aggregations.rating_per_hour.buckets', []);
 
 	const rating_per_hour = ratings.map(item => {
+		const d = new Date(item.key_as_string);
 		return {
 			date: item.key_as_string,
 			timestamp: item.key,
+			label: `${d.getUTCHours()}`,
 			value: item.doc_count,
 			average: item.rating_average.value,
 		};
