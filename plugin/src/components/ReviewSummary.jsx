@@ -12,12 +12,6 @@ const Summary = styled.p`
 	color: #4f585e;
 `;
 
-const Sentiment = styled.p`
-	font-weight: 700;
-	font-size: 16px;
-	color: #4f585e;
-`;
-
 const ReviewSummary = ({ rating, count }) => {
 	return (
 		<div>

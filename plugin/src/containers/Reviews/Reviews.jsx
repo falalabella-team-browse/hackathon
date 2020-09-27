@@ -7,15 +7,6 @@ import Pagination from '../../components/Pagination';
 import ReviewBlock from '../../components/ReviewBlock';
 import { useUser } from '../../Context/UserContext';
 import http from '../../http';
-import './emoji.css';
-
-const getEmoji = {
-	1: <span class="twa twa-pouting-face" title="Dissapointed"></span>,
-	2: <span class="twa twa-unamused-face" title="Sad"></span>,
-	3: <span class="twa twa-zipper-mouth" title="Neutral"></span>,
-	4: <span class="twa twa-smiling-face" title="Happy"></span>,
-	5: <span class="twa twa-star-struck" title="Excited"></span>,
-};
 
 const Container = styled.div``;
 
@@ -48,7 +39,6 @@ const ReviewsContainer = ({ counter, forUser }) => {
 	const [reviews, setReviews] = useState([]);
 	const [loading, setLoading] = useState(false);
 	const [total, setTotal] = useState(0);
-	const [averageSentiment, setAverageSentiment] = useState(0);
 	const user = useUser();
 
 	const handleOptionChange = val => {
@@ -67,8 +57,6 @@ const ReviewsContainer = ({ counter, forUser }) => {
 		if (!data.success || !Array.isArray(data.body.data.data) || data.body.data.data.length === 0) {
 			return;
 		}
-
-		setAverageSentiment(data.body.data.meta.averageSentiment);
 
 		setReviews(data.body.data.data);
 		setTotal(data.body.data.meta.total);
@@ -94,9 +82,7 @@ const ReviewsContainer = ({ counter, forUser }) => {
 
 	return (
 		<Container>
-			<Heading>
-				Reviews ({total}) {getEmoji[Math.ceil(averageSentiment)]}
-			</Heading>
+			<Heading>Reviews ({total})</Heading>
 
 			<Dropdown
 				options={OPTIONS}

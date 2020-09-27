@@ -24,8 +24,7 @@ const analyse = ({
 		score = 0,
 		scanned = [],
 		positive = [],
-		negative = [],
-		calculation = [];
+		negative = [];
 	const hasAbusiveContent = utils.hasAbusivesContent(tokens);
 
 	var i = tokens.length;
@@ -41,8 +40,6 @@ const analyse = ({
 		if (tokenScore < 0) negative.push(word);
 
 		score = score + tokenScore;
-
-		calculation.push(tokenScore);
 	}
 
 	const review_score = utils.getOverallRating({
