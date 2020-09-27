@@ -6,7 +6,7 @@ const aggregation =  {
 	  params: {
 		type: 'object',
 		properties: {
-			    reviewId: { 
+			    id: { 
             type: 'string',
           }
 		}
