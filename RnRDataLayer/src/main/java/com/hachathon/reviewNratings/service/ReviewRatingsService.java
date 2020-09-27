@@ -15,6 +15,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.elasticsearch.action.bulk.BulkResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -40,12 +41,14 @@ public class ReviewRatingsService {
     @Autowired
     public UtilService utilService;
 
+    @Value("${fileName}")
+    private String fileName;
+
 
     public void bulkIngest() throws IOException, InvalidFormatException {
         Long startTime = Instant.now().getEpochSecond();
-        String inputFilePath = "/Users/shreyas-temp/Downloads/reviews_rating_data.xls";
         try{
-            Map<Boolean, List<CompletableFuture<BulkResponse>>> response = parseXL(inputFilePath);
+            Map<Boolean, List<CompletableFuture<BulkResponse>>> response = parseXL(fileName);
             Long endTimeInSec = Instant.now().getEpochSecond();
             Long elapsedTime = endTimeInSec - startTime;
             System.out.println("Elapsed time in seconds: "+elapsedTime);;
@@ -89,11 +92,9 @@ public class ReviewRatingsService {
             Random rd = new Random();
             int help = getRandomNumber(helpful_min,helpful_max);
             boolean verifiedPurchase = rd.nextBoolean();
-
-
-            String author = null != row.getCell(0) ? String.valueOf(row.getCell(0).getNumericCellValue()):null;
+            String author = null != row.getCell(0) ? String.valueOf(row.getCell(0).getNumericCellValue()).replace(".0",""):null;
             float rating = null != row.getCell(4) ? Float.valueOf(String.valueOf(row.getCell(4).getNumericCellValue())):null;
-            String entityId = null != row.getCell(1)?String.valueOf(row.getCell(1).getNumericCellValue()):null;
+            String entityId = null != row.getCell(1)?String.valueOf(row.getCell(1).getNumericCellValue()).replace(".0",""):null;
             String title = null != row.getCell(2)?row.getCell(2).getStringCellValue():null;
             String description =null != row.getCell(3) ? row.getCell(3).getStringCellValue():null;
             SentimentAnalysisRequest analysisRequest = SentimentAnalysisRequest.builder()
@@ -128,52 +129,9 @@ public class ReviewRatingsService {
         }
     }
 
-    /*private Function<String, ReviewsAndRatings> mapToItem = (line) -> {
-        if(null != line && line.split(",").length > 4){
-            String[] p = line.split(",");// a CSV has comma separated lines
-            int help = getRandomNumber(1,1000);
-            int sent = getRandomNumber(-100,100);
-            int overall = getRandomNumber(1,10);
-            int sentiment = getRandomNumber(-2,2);
-            return ReviewsAndRatings.builder()
-                    .author(p[0])
-                    .rating(Float.valueOf(p[4]))
-                    .entityId(p[1])
-                    .title(p[2])
-                    .description(p[3])
-                    .create_date(ZonedDateTime.now().format(DateTimeFormatter.ISO_INSTANT))
-                    .modified_date(ZonedDateTime.now().format(DateTimeFormatter.ISO_INSTANT))
-                    .helpful_count(Long.valueOf(String.valueOf(help)))
-                    .sentiment_factor(Float.valueOf(String.valueOf(sent)))
-                    .sentiment(sentiment)
-                    .overall_rating(Float.valueOf(String.valueOf(overall)))
-                    .build();
-        }else{
-            return null;
-        }
-    };*/
-
     public int getRandomNumber(int min, int max) {
         return (int) ((Math.random() * (max - min)) + min);
     }
 
- /*   public static<T> List[] partition(List<T> list, int numPerBatch)
-    {
-        // calculate number of partitions of size n each
-        int numPartitions = list.size() /  numPerBatch;
-        if (list.size() % numPerBatch != 0)
-            numPartitions++;
-
-        // partition a list into sublists of size n each
-        List<List<T>> itr = ListUtils.partition(list, numPerBatch);
-
-        // create m empty lists and initialize it with sublists
-        List<T>[] partition = new ArrayList[numPartitions];
-        for (int count = 0; count < numPartitions; count++)
-            partition[count] = new ArrayList(itr.get(count));
-
-        // return the lists
-        return partition;
-    }*/
 
 }
