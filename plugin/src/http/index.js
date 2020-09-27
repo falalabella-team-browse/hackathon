@@ -42,6 +42,15 @@ const getAllReviews = async (entityId, pageNo, sort) => {
   );
 };
 
+const getAllReviewsForUser = async (userId, pageNo, sort) => {
+  return safeFetch(
+    `${getBasePath()}/api/v1/myReviews?author=${userId}&sort=${sort}&reviewStatus=Published&pageNo=${pageNo}`,
+    {
+      method: "GET",
+    }
+  );
+};
+
 const increamenHelpfulCount = async (body) => {
   return safeFetch(`${getBasePath()}/api/v1/ratingsAndReviews/flag`, {
     method: "POST",
@@ -87,6 +96,7 @@ const updateReview = (id, rating, title, description, images) => {
 const http = {
   increamenHelpfulCount,
   addNewReview,
+  getAllReviewsForUser,
   getAllReviews,
   getAggregatedDetails,
   getImageUrls,

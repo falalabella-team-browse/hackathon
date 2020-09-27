@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import { FilledButton } from "../../components/Button";
+import { OutlinedButton } from "../../components/Button";
 import CircularLoader from "../../components/CircluarLoader";
 import Dropdown from "../../components/Dropdown";
 import Pagination from "../../components/Pagination";
@@ -33,7 +33,7 @@ const OPTIONS = [
   { label: "Most Helpful", value: "helpful_count:desc" },
 ];
 
-const ReviewsContainer = ({ counter }) => {
+const ReviewsContainer = ({ counter, forUser }) => {
   const [page, setPage] = useState(0);
   const [selected, setSelected] = useState(OPTIONS[0].value);
   const [reviews, setReviews] = useState([]);
@@ -48,7 +48,11 @@ const ReviewsContainer = ({ counter }) => {
 
   const loadReviews = async () => {
     setLoading(true);
-    const data = await http.getAllReviews(user.productId, page, selected);
+    const promise = forUser
+      ? http.getAllReviewsForUser(user.userId, page, selected)
+      : http.getAllReviews(user.productId, page, selected);
+
+    const data = await promise;
     setLoading(false);
 
     if (
@@ -89,6 +93,9 @@ const ReviewsContainer = ({ counter }) => {
         options={OPTIONS}
         selected={selected}
         onChange={handleOptionChange}
+        hint="Most relevant sort scores the reviews based on various factors like
+        verified purchase by the user, helpful content , images and user
+        ratings."
       />
 
       <ReviewList>
