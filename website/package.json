@@ -6,7 +6,8 @@
   "scripts": {
     "start": "parcel public/index.html",
     "watch": "parcel public/index.html",
-    "build:server": "BASE_URL=https://hack.rlab.app parcel build public/index.html --out-dir=build"
+    "build:server": "BASE_URL=https://hack.rlab.app parcel build public/index.html --out-dir=build",
+    "build": "parcel build public/index.html --out-dir=build"
   },
   "dependencies": {
     "@material-ui/core": "^4.9.10",

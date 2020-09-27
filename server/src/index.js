@@ -12,9 +12,6 @@ const server = fastify({
   bodyLimit: 15485760,
 });
 
-server.register(require("fastify-jwt"), {
-  secret: process.env.JWT_SECRET,
-});
 server.register(require("fastify-env"), config);
 server.register(restClient);
 server.register(require("fastify-cors"), {
