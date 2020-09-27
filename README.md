@@ -1,5 +1,13 @@
 # Falabella Hackathon - Team Browse
 
+### Demo URLS
+
+1. Product Page = https://hackathon.rlab.app/12/929 (/author-id/product-id)
+2. Authors Page = https://hackathon.rlab.app/22 (/author-id)
+3. Admin Page = https://hackathon.rlab.app/admin
+4. Product Analytics Page = https://hackathon.rlab.app/analytics/1072?entityType=sku (/product-d)
+5. Author Analytics Page = https://hackathon.rlab.app/analytics/22?entityType=author (/author-id)
+
 ## Development Setup
 
 Requirements
