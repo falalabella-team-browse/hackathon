@@ -48,10 +48,21 @@ const getAllReviews = async (query = '') => {
 	});
 };
 
+const getProductAnalytics = async URL => {
+	const url = `${getBasePath()}/api/v1${URL}`;
+	return safeFetch(url, {
+		method: 'GET',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+	});
+};
+
 const restClients = {
 	updateStatus,
 	getAllReviewsForEntity,
 	getAllReviews,
+	getProductAnalytics,
 };
 
 export default restClients;

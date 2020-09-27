@@ -178,7 +178,7 @@ const ProductLanding = () => {
         clearInterval(timer);
 
         const element = document.getElementById("reviews");
-        RNR.setHost(process.env.BASE_URL);
+        // RNR.setHost(process.env.BASE_URL);
         RNR.load(element, {
           userId: userId,
           productId: productId,

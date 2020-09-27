@@ -7,16 +7,10 @@ const Container = styled.div`
 	align-items: center;
 `;
 
-const PieChartGraph = () => {
+const PieChartGraph = ({ data }) => {
 	return (
 		<Container>
-			<PieChart
-				data={[
-					{ label: 'Abusive', value: 23 },
-                    { label: 'Published', value: 56 },
-                    { label: 'Removed', value: 5 },
-				]}
-			/>
+			<PieChart data={data} />
 		</Container>
 	);
 };

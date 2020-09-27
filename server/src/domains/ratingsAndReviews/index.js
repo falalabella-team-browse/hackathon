@@ -3,13 +3,7 @@ const get = require('lodash/get');
 const moduleController = require('../../modules/controllers');
 const verifiedPurchase = require('../../configs/verifiedPurchase.json');
 const getOverallRating = require('../utils');
-const { 
-	generateQuery, 
-	aggregator_Average,
-	aggregator_Analytics,
-	aggEnums,
-	aggregator_Histogram
-} = require('./helper');
+const { generateQuery, aggregator_Average, aggregator_Analytics, aggEnums, aggregator_Histogram } = require('./helper');
 var tokenize = require('../../modules/controllers/sentiment/tokenize');
 const apiSchemas = require('./schema');
 
@@ -229,8 +223,8 @@ const updateStatus = fastify => async (req, reply) => {
 	}
 
 	return reply.code(200).send({
-		success : true,
-		msg : "updated successfully"
+		success: true,
+		msg: 'updated successfully',
 	});
 };
 
@@ -267,8 +261,8 @@ const markHelpFul = fastify => async (req, reply) => {
 	}
 
 	return reply.code(200).send({
-		success : true,
-		msg : "updated successfully"
+		success: true,
+		msg: 'updated successfully',
 	});
 };
 
@@ -303,6 +297,8 @@ const averageRatings = (fastify, method = 'average') => async (req, reply) => {
 		aggs: aggregator,
 	};
 
+	console.log(JSON.stringify(reqBody));
+
 	const response = await fastify.restClient.post(constants.SEARCH_URL, reqBody, headers);
 
 	if (response && response.error) {
@@ -318,7 +314,7 @@ const averageRatings = (fastify, method = 'average') => async (req, reply) => {
 	const sentiments = get(response, 'aggregations.sentiment_buckets.buckets', []);
 	const review = get(response, 'aggregations.review_status.buckets', []);
 
-	const review_status =  review.map(bkt => {
+	const review_status = review.map(bkt => {
 		return {
 			key: bkt.key,
 			value: bkt.doc_count,
@@ -355,7 +351,7 @@ const averageRatings = (fastify, method = 'average') => async (req, reply) => {
 	});
 };
 
-const histogram = (fastify) => async (req, reply) => {
+const histogram = fastify => async (req, reply) => {
 	const { id } = req.params;
 
 	const headers = {
@@ -367,7 +363,7 @@ const histogram = (fastify) => async (req, reply) => {
 		_source: false,
 		size: 0,
 		query: {
-			bool:  {
+			bool: {
 				must: [generateQuery('entityId', id)],
 			},
 		},
@@ -385,14 +381,13 @@ const histogram = (fastify) => async (req, reply) => {
 
 	const totalNumberOfReviews = get(response, 'hits.total.value', 0);
 	const ratings = get(response, 'aggregations.rating_per_hour.buckets', []);
-	
 
 	const rating_per_hour = ratings.map(item => {
 		return {
 			date: item.key_as_string,
 			timestamp: item.key,
 			value: item.doc_count,
-			average:  item.rating_average.value
+			average: item.rating_average.value,
 		};
 	});
 
@@ -413,7 +408,7 @@ const searchRatings = fastify => async (req, reply) => {
 		pageNo = 0,
 		entityId = '',
 		reviewStatus = 'Published',
-		author = ''
+		author = '',
 	} = req.query;
 
 	const headers = {
@@ -425,7 +420,7 @@ const searchRatings = fastify => async (req, reply) => {
 		verifiedPurchase,
 		entityId,
 		reviewStatus,
-		author
+		author,
 	};
 	const mustMatch = Object.keys(filters)
 		.filter(key => filters[key])
@@ -475,11 +470,10 @@ const searchRatings = fastify => async (req, reply) => {
 	handleResponse(results, reply);
 };
 
-
 module.exports = async fastify => {
-	fastify.post('/ratingsAndReviews', apiSchemas.createReviewSchema , postHandler(fastify));
+	fastify.post('/ratingsAndReviews', apiSchemas.createReviewSchema, postHandler(fastify));
 	fastify.post('/ratingsAndReviews/flag', apiSchemas.flagReviewSchema, markHelpFul(fastify));
-	fastify.post('/ratingsAndReviews/edit', apiSchemas.editReviewSchema,  editHandler(fastify));
+	fastify.post('/ratingsAndReviews/edit', apiSchemas.editReviewSchema, editHandler(fastify));
 	fastify.post('/ratingsAndReviews/updateStatus', apiSchemas.updateReviewSchema, updateStatus(fastify));
 	fastify.get('/ratingsAndReviews', apiSchemas.getReviews, searchRatings(fastify));
 	fastify.get('/myReviews', apiSchemas.getMyReviews, searchRatings(fastify));
