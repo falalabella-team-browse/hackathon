@@ -1,6 +1,6 @@
 const fastify = require("fastify");
 const routes = require("./routes");
-const { database, storage } = require("./services");
+const { storage } = require("./services");
 const { analyserModule } = require("./modules");
 const config = require("./plugins/config");
 const restClient = require("./plugins/restClients");
@@ -20,7 +20,6 @@ server.register(restClient);
 server.register(require("fastify-cors"), {
   origin: true,
 });
-server.register(database);
 server.register(storage);
 server.register(analyserModule);
 server.register(routes, { prefix: "/api/v1" });

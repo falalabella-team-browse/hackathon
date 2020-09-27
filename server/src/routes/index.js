@@ -1,4 +1,3 @@
-const authRoutes = require("./auth");
 const analyserRoutes = require("./analyser");
 const ratingsAndReviews = require("../domains/ratingsAndReviews");
 const { createReadStream } = require("fs");
@@ -25,7 +24,6 @@ const routes = async (fastify, opt, next) => {
     });
   });
 
-  fastify.register(authRoutes, { prefix: "/auth" });
   fastify.register(analyserRoutes, { prefix: "/analyse" });
   fastify.register(ratingsAndReviews);
 
