@@ -11,7 +11,10 @@ Requirements
 
 ```
 # Install global dependencies
-yarn install
+yarn install -W
+
+# Install plugin dependencies
+yarn workspace plugin install
 
 # Install server dependencies
 yarn workspace server install
