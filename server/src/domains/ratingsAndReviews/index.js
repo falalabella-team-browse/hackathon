@@ -1,7 +1,7 @@
 const constants = require('../../configs/constants');
 const get = require('lodash/get');
 const moduleController = require('../../modules/controllers');
-const verifiedPurchase = require('../../configs/verifiedPurchase.json');
+const verifiedPurchaseData = require('../../configs/verifiedPurchase.json');
 const getOverallRating = require('../utils');
 const { generateQuery, aggregator_Average, aggregator_Analytics, aggEnums, aggregator_Histogram } = require('./helper');
 var tokenize = require('../../modules/controllers/sentiment/tokenize');
@@ -64,7 +64,7 @@ const postHandler = fastify => async (req, reply) => {
 
 	const ids = images.map(img => fastify.storage.saveImage(img));
 
-	const verifiedPurchase = [...(verifiedPurchase[author] || [])].includes(entityId);
+	const verifiedPurchase = [...(verifiedPurchaseData[author] || [])].includes(entityId);
 	const sentimentData = moduleController.sentiment().analyse({
 		phrase: rawComment,
 		languageCode: 'en',
@@ -123,7 +123,6 @@ const postHandler = fastify => async (req, reply) => {
 
 const editHandler = fastify => async (req, reply) => {
 	const { id, rating = 0, title = '', description = '', images = [], author = '' } = req.body;
-
 	if (rating < 1 || rating > 5) {
 		badRequest(400, reply);
 	}
@@ -136,7 +135,7 @@ const editHandler = fastify => async (req, reply) => {
 		badRequest(400, reply, 'Only 5 images are allowed');
 	}
 
-	const verifiedPurchase = [...(verifiedPurchase[author] || [])].includes(id);
+	const verifiedPurchase = [...(verifiedPurchaseData[author] || [])].includes(id);
 
 	const headers = {
 		Authorization: 'Basic ZWxhc3RpYzptRG9HTFA1VmNuU3poNEVWeU4wek1FV0o=',
@@ -242,7 +241,7 @@ const updateStatus = fastify => async (req, reply) => {
 };
 
 const markHelpFul = fastify => async (req, reply) => {
-	const { id, helpful_count, verifiedPurchase, rating, sentiment, title, description, imageLink = [] } = req.body;
+	const { id, helpful_count, verifiedPurchase, rating, title, description, imageLink = [] } = req.body;
 
 	const sentimentData = moduleController.sentiment().analyse({
 		phrase: title + description,
@@ -309,7 +308,7 @@ const averageRatings = (fastify, method = 'average') => async (req, reply) => {
 		query: {
 			bool: method === 'analytics' ? queryForAnalytics : queryForAverage,
 		},
-		aggs: aggregator
+		aggs: aggregator,
 	};
 
 	const response = await fastify.restClient.post(constants.SEARCH_URL, reqBody, headers);
@@ -364,7 +363,7 @@ const averageRatings = (fastify, method = 'average') => async (req, reply) => {
 	});
 };
 
-const histogram = (fastify) => async (req, reply) => {
+const histogram = fastify => async (req, reply) => {
 	const { reviewId } = req.params;
 
 	const headers = {
@@ -376,7 +375,7 @@ const histogram = (fastify) => async (req, reply) => {
 		_source: false,
 		size: 0,
 		query: {
-			bool:  {
+			bool: {
 				must: [generateQuery('entityId', reviewId)],
 			},
 		},
@@ -455,7 +454,7 @@ const searchRatings = fastify => async (req, reply) => {
 			},
 		},
 		sort: [sortBy],
-		aggs: aggregator_Average
+		aggs: aggregator_Average,
 	};
 	const response = await fastify.restClient.post(url, reqBody, headers);
 
@@ -486,7 +485,7 @@ const searchRatings = fastify => async (req, reply) => {
 		data: sanitisedData,
 		meta: {
 			total: response.hits.total.value,
-		}
+		},
 	};
 	handleResponse(results, reply);
 };
