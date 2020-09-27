@@ -6,7 +6,7 @@ const aggregation =  {
 	  params: {
 		type: 'object',
 		properties: {
-          id: { 
+			    reviewId: { 
             type: 'string',
           }
 		}
@@ -141,7 +141,7 @@ const analytics =  {
 
 const histogram =  {
 	schema: {
-	  description: 'This API is to get analytical data on reviews and ratings of a product',
+	  description: 'This API is to get hourly analytical data on reviews and ratings of a product',
 	  tags: ['For Admin and Analytics'],
 	  params: {
 		type: 'object',

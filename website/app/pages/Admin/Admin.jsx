@@ -262,10 +262,10 @@ const Admin = () => {
 		return (
 			<tr>
 				<td>
-					<a href={`/analytics/${review.entityId}?entiryType=sku`}>{review.entityId}</a>
+					<a href={`/analytics/${review.entityId}?entityType=sku`}>{review.entityId}</a>
 				</td>
 				<td>
-					<a href={`/analytics/${review.author}?entiryType=author`}>{review.author}</a>
+					<a href={`/analytics/${review.author}?entityType=author`}>{review.author}</a>
 				</td>
 				<td>{review.title}</td>
 				<td>{review.description}</td>

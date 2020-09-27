@@ -1,0 +1,51 @@
+kind: pipeline
+type: kubernetes
+name: default
+
+workspace:
+  path: /drone/src
+
+steps:
+  - name: build-cache
+    image: node:lts-alpine
+    commands:
+      - "yarn install -W"
+  # - name: lint
+  #   image: node:lts-alpine
+  #   commands:
+  #     - "yarn lint:website"
+  #     - "yarn lint:server"
+  - name: build-plugin
+    image: node:lts-alpine
+    commands:
+      - "yarn workspace plugin build"
+  - name: build-website
+    image: node:lts-alpine
+    commands:
+      - "APP_NAME=Hackathon BASE_URL=http://hackathon.rlab.app NODE_ENV=production yarn workspace website build"
+  - name: build-image
+    image: plugins/docker
+    settings:
+      username:
+        from_secret: docker_username
+      password:
+        from_secret: docker_password
+      repo: falabrowse/review-n-rating
+      tags:
+        - latest
+        - ${DRONE_COMMIT:0:8}
+  - name: deploy
+    image: alpine/helm:3.2.1
+    environment:
+      KUBECONFIG_FILE:
+        from_secret: KUBECONFIG
+    commands:
+      - echo "$KUBECONFIG_FILE" > kubeconfig.b64
+      - export KUBECONFIG="$PWD/kubeconfig.yml"
+      - base64 -d kubeconfig.b64 > kubeconfig.yml
+      - helm upgrade --wait --install --atomic rnr helm/rnr/. -n falabella -f helm/values.yaml --set-string image.tag="${DRONE_COMMIT:0:8}"
+    # when:
+    #   event:
+    #     - promote
+    #   target:
+    #     - production

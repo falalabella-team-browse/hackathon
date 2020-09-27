@@ -176,13 +176,13 @@ const editHandler = fastify => async (req, reply) => {
 };
 
 const getHandler = fastify => async (req, reply) => {
-	const { id } = req.params;
+	const { reviewId } = req.params;
 
 	const headers = {
 		Authorization: 'Basic ZWxhc3RpYzptRG9HTFA1VmNuU3poNEVWeU4wek1FV0o=',
 	};
 
-	const url = constants.GET_REVIEW_BYID_URL + `/${id}`;
+	const url = constants.GET_REVIEW_BYID_URL + `/${reviewId}`;
 
 	const response = await fastify.restClient.get(url, headers);
 
@@ -196,7 +196,7 @@ const getHandler = fastify => async (req, reply) => {
 	const { _source, _id } = response;
 
 	const schema = {
-		id: _id,
+		reviewId: _id,
 		..._source,
 	};
 
@@ -309,7 +309,7 @@ const averageRatings = (fastify, method = 'average') => async (req, reply) => {
 		query: {
 			bool: method === 'analytics' ? queryForAnalytics : queryForAverage,
 		},
-		aggs: aggregator,
+		aggs: aggregator
 	};
 
 	const response = await fastify.restClient.post(constants.SEARCH_URL, reqBody, headers);
@@ -364,8 +364,8 @@ const averageRatings = (fastify, method = 'average') => async (req, reply) => {
 	});
 };
 
-const histogram = fastify => async (req, reply) => {
-	const { id } = req.params;
+const histogram = (fastify) => async (req, reply) => {
+	const { reviewId } = req.params;
 
 	const headers = {
 		Authorization: 'Basic ZWxhc3RpYzptRG9HTFA1VmNuU3poNEVWeU4wek1FV0o=',
@@ -376,8 +376,8 @@ const histogram = fastify => async (req, reply) => {
 		_source: false,
 		size: 0,
 		query: {
-			bool: {
-				must: [generateQuery('entityId', id)],
+			bool:  {
+				must: [generateQuery('entityId', reviewId)],
 			},
 		},
 		aggs: aggregator_Histogram,
@@ -453,6 +453,7 @@ const searchRatings = fastify => async (req, reply) => {
 			},
 		},
 		sort: [sortBy],
+		aggs: aggregator_Average
 	};
 	const response = await fastify.restClient.post(url, reqBody, headers);
 
@@ -467,6 +468,9 @@ const searchRatings = fastify => async (req, reply) => {
 		return handleResponse({}, reply);
 	}
 
+	const totalNumberOfReviews = get(response, 'hits.total.value', 0);
+	const averageRating = get(response, 'aggregations.avg_rating.value', 0);
+
 	const sanitisedData = response.hits.hits.map(data => {
 		return {
 			id: data._id,
@@ -475,10 +479,12 @@ const searchRatings = fastify => async (req, reply) => {
 	});
 
 	const results = {
+		totalNumberOfReviews,
+		averageRating,
 		data: sanitisedData,
 		meta: {
 			total: response.hits.total.value,
-		},
+		}
 	};
 	handleResponse(results, reply);
 };
@@ -490,8 +496,8 @@ module.exports = async fastify => {
 	fastify.post('/ratingsAndReviews/updateStatus', apiSchemas.updateReviewSchema, updateStatus(fastify));
 	fastify.get('/ratingsAndReviews', apiSchemas.getReviews, searchRatings(fastify));
 	fastify.get('/myReviews', apiSchemas.getMyReviews, searchRatings(fastify));
-	fastify.get('/ratingsAndReviews/:id', apiSchemas.getReviewById, getHandler(fastify));
+	fastify.get('/ratingsAndReviews/:reviewId', apiSchemas.getReviewById, getHandler(fastify));
 	fastify.get('/averageRatings/:id', apiSchemas.aggregation, averageRatings(fastify, 'average'));
 	fastify.get('/analytics/:id', apiSchemas.analytics, averageRatings(fastify, 'analytics'));
-	fastify.get('/histogram/:id', apiSchemas.histogram, histogram(fastify));
+	fastify.get('/histogram/:reviewId', apiSchemas.histogram, histogram(fastify));
 };
