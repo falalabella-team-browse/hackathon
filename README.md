@@ -4,8 +4,8 @@
 
 Requirements
 
-- `Node v12`
-- `yarn` (to install run `npm i -g yarn`)
+-   `Node v12`
+-   `yarn` (to install run `npm i -g yarn`)
 
 ### Install dependencies
 
@@ -88,12 +88,12 @@ yarn workspace website add <list-of-package>
 
 ```html
 <script>
-  const element = document.getElementById("reviews");
-  RNR.setHost("api-server-host");
-  RNR.load(element, {
-    userId: "user-id",
-    productId: "product-id",
-  });
+	const element = document.getElementById('reviews');
+	RNR.setHost('api-server-host');
+	RNR.load(element, {
+		userId: 'user-id',
+		productId: 'product-id',
+	});
 </script>
 ```
 
@@ -101,56 +101,68 @@ yarn workspace website add <list-of-package>
 
 ```html
 <script>
-  const element = document.getElementById("reviews");
-  RNR.setHost("api-server-host");
-  RNR.loadUserPanel(element, {
-    userId: "user-id",
-  });
+	const element = document.getElementById('reviews');
+	RNR.setHost('api-server-host');
+	RNR.loadUserPanel(element, {
+		userId: 'user-id',
+	});
 </script>
 ```
+### Devops
+1. Docker
+2. Docker-compose
+3. CICD : https://drone.io/ 
+4. helm deployment 
+5. Server : https://contabo.com/
+
+### CICD Pipelines
+
+[CICD Pipelines](https://ci.rlab.app/falalabella-team-browse/hackathon).
 
 ### Review n Ratings APIS
 
+[Swagger Documentation](https://hackathon.rlab.app/documentation/static/index.html).
+
 1. Create new review
 
-   ```
-      (post) : 'api/v1/ratingsAndReviews'
-      (reqBody) : { entityId, rating , title,  description, author}
+    ```
+       (post) : 'api/v1/ratingsAndReviews'
+       (reqBody) : { entityId, rating , title,  description, author}
 
-   ```
+    ```
 
 2. Edit review
 
-   ```
-      (post) : 'api/v1/ratingsAndReviews/edit'
-      (reqBody) : { id, rating , title,  description}
+    ```
+       (post) : 'api/v1/ratingsAndReviews/edit'
+       (reqBody) : { id, rating , title,  description}
 
-   ```
+    ```
 
 3. Mark review as Helpfull
 
-   ```
-      (post) : 'api/v1/ratingsAndReviews/flag'
-      (reqBody) : { id, helpful_count}
+    ```
+       (post) : 'api/v1/ratingsAndReviews/flag'
+       (reqBody) : { id, helpful_count}
 
-   ```
+    ```
 
 4. Remove/Delete review
 
-   ```
-      (delete) : 'api/v1/ratingsAndReviews/{reviewId}'
-   ```
+    ```
+       (delete) : 'api/v1/ratingsAndReviews/{reviewId}'
+    ```
 
 5. Get Review with Id
 
-   ```
-      (get) : 'api/v1/ratingsAndReviews/{reviewId}'
+    ```
+       (get) : 'api/v1/ratingsAndReviews/{reviewId}'
 
-   ```
+    ```
 
 6. Get averageRatings
 
-   ```
-      (get) : 'api/v1/averageRatings/{entityid}'
+    ```
+       (get) : 'api/v1/averageRatings/{entityid}'
 
-   ```
+    ```
