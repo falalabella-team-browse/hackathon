@@ -297,8 +297,6 @@ const averageRatings = (fastify, method = 'average') => async (req, reply) => {
 		aggs: aggregator,
 	};
 
-	console.log(JSON.stringify(reqBody));
-
 	const response = await fastify.restClient.post(constants.SEARCH_URL, reqBody, headers);
 
 	if (response && response.error) {
