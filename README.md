@@ -63,10 +63,6 @@ yarn workspace website add <list-of-package>
 
 `src/routes` - Routes Declaration
 
-`src/database/controllers` - Database controllers Declarations
-
-`src/database/schema` - Database schema Declarations
-
 `src/utils` - Utilities
 
 ### Website
