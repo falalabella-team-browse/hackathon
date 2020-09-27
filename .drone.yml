@@ -22,7 +22,7 @@ steps:
   - name: build-website
     image: node:lts-alpine
     commands:
-      - "APP_NAME=Hackathon BASE_URL=http://hackathon.rlab.app NODE_ENV=production yarn workspace website build"
+      - "APP_NAME=Hackathon BASE_URL=https://hackathon.rlab.app NODE_ENV=production yarn workspace website build"
   - name: build-image
     image: plugins/docker
     settings:
