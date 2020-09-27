@@ -1,8 +1,8 @@
 const constants = {
-	CREAT_NEW_REVIEW_URL: 'https://3f6c946c272c4aba9e7ca147ba2fbb97.us-central1.gcp.cloud.es.io:9243/review_v15/_doc',
-	UPDATE_REVIEW_URL: 'https://3f6c946c272c4aba9e7ca147ba2fbb97.us-central1.gcp.cloud.es.io:9243/review_v15/_update',
-	GET_REVIEW_BYID_URL: 'https://3f6c946c272c4aba9e7ca147ba2fbb97.us-central1.gcp.cloud.es.io:9243/review_v15/_doc',
-	SEARCH_URL: 'https://3f6c946c272c4aba9e7ca147ba2fbb97.us-central1.gcp.cloud.es.io:9243/review_v15/_search',
+	CREAT_NEW_REVIEW_URL: 'https://3f6c946c272c4aba9e7ca147ba2fbb97.us-central1.gcp.cloud.es.io:9243/review_demo/_doc',
+	UPDATE_REVIEW_URL: 'https://3f6c946c272c4aba9e7ca147ba2fbb97.us-central1.gcp.cloud.es.io:9243/review_demo/_update',
+	GET_REVIEW_BYID_URL: 'https://3f6c946c272c4aba9e7ca147ba2fbb97.us-central1.gcp.cloud.es.io:9243/review_demo/_doc',
+	SEARCH_URL: 'https://3f6c946c272c4aba9e7ca147ba2fbb97.us-central1.gcp.cloud.es.io:9243/review_demo/_search',
 	SENTIMENT_FACTOR: {
 		NEUTRAL: 3,
 		SAD: 2,
