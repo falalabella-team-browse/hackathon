@@ -97,6 +97,18 @@ yarn workspace website add <list-of-package>
 </script>
 ```
 
+3. Load user module
+
+```html
+<script>
+  const element = document.getElementById("reviews");
+  RNR.setHost("api-server-host");
+  RNR.loadUserPanel(element, {
+    userId: "user-id",
+  });
+</script>
+```
+
 ### Review n Ratings APIS
 
 1. Create new review

@@ -32,20 +32,16 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          {{- if .Values.persistence.enabled }}
           env:
             - name: DATA_PATH
               value: "/data"
-          {{- end }}
           ports:
             - name: http
               containerPort: 3000
               protocol: TCP
           volumeMounts:
-            {{- if .Values.persistence.enabled }}
             - name: data
               mountPath: /data
-            {{- end }}
           livenessProbe:
             httpGet:
               path: /
@@ -57,11 +53,18 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:
-        {{- if .Values.persistence.enabled }}
         - name: data
+        {{- if .Values.persistentVolume.enabled }}
           persistentVolumeClaim:
-            claimName: {{ .Values.persistence.existingClaim | default (include "rnr.fullname" .) }}
-        {{- end }}
+            claimName: {{ if .Values.persistentVolume.existingClaim }}{{ .Values.persistentVolume.existingClaim }}{{- else }}{{ template "rnr.fullname" . }}{{- end }}
+        {{- else }}
+          emptyDir:
+          {{- if .Values.emptyDir.sizeLimit }}
+            sizeLimit: {{ .Values.emptyDir.sizeLimit }}
+          {{- else }}
+            {}
+          {{- end -}}
+        {{- end -}}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

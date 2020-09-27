@@ -1,0 +1,32 @@
+
+imagePullSecrets:
+  - name: regcred
+
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: nginx
+  hosts:
+    - host: hackathon.rlab.app
+      paths:
+        - "/"
+  tls: []
+
+persistentVolume:
+  enabled: true
+  accessModes:
+    - ReadWriteOnce
+  annotations: {}
+  existingClaim: ""
+  mountPath: /data
+  size: 8Gi
+  storageClass: "local-path"
+  volumeMode: ""
+
+resources:
+  limits:
+    cpu: 300m
+    memory: 1Gii
+  requests:
+    cpu: 300m
+    memory: 1Gi

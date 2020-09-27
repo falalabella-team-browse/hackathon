@@ -43,22 +43,41 @@ ingress:
 ## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
 ##
 ##
-persistence:
+persistentVolume:
   enabled: true
-  ## Grafana data Persistent Volume Storage Class
+
+  ## Server data Persistent Volume access modes
+  ## Must match those of existing PV or dynamic provisioner
+  accessModes:
+    - ReadWriteOnce
+
+  ##  Server data Persistent Volume annotations
+  annotations: {}
+
+  ## If you'd like to bring your own PVC for persisting state, pass the name of the
+  ## created + ready PVC here. If set, this Chart will not create the default PVC.
+  ## Requires server.persistentVolume.enabled: true
+  existingClaim: ""
+
+  ## Server data Persistent Volume mount root path
+  mountPath: /data
+
+  ## Server data Persistent Volume size
+  size: 8Gi
+
+  ## Server data Persistent Volume Storage Class
   ## If defined, storageClassName: <storageClass>
   ## If set to "-", storageClassName: "", which disables dynamic provisioning
   ## If undefined (the default) or set to null, no storageClassName spec is
   ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
   ##   GKE, AWS & OpenStack)
-  ##
-  # storageClass: "-"
-  ##
-  ## If you want to reuse an existing claim, you can pass the name of the PVC using
-  ## the existingClaim variable
-  # existingClaim: your-claim
-  accessMode: ReadWriteOnce
-  size: 10Gi
+  storageClass: ""
+
+  ## Server data Persistent Volume Binding Mode
+  ## If defined, volumeMode: <volumeMode>
+  ## If empty (the default) or set to null, no volumeBindingMode spec is
+  ## set, choosing the default mode.
+  volumeMode: ""
   
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious

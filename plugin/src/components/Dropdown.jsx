@@ -1,10 +1,13 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, Fragment } from "react";
 import styled from "styled-components";
 import DownArrow from "./DownArrow";
 
+const Wrapper = styled.div`
+  margin: 12px 0;
+`;
+
 const Container = styled.div`
   position: relative;
-  margin: 12px 0;
   padding: 8px 0;
   border-bottom: 2px solid #dfdfdf;
   max-width: 300px;
@@ -48,7 +51,13 @@ const Icon = styled.div`
   right: 15px;
 `;
 
-const Dropdown = ({ options = [], selected, onChange }) => {
+const Hint = styled.p`
+  font-size: 11px;
+  color: gray;
+  margin-top: 5px;
+`;
+
+const Dropdown = ({ options = [], selected, onChange, hint }) => {
   const [focus, setFocus] = useState(false);
   const wrapperRef = useRef();
 
@@ -78,21 +87,25 @@ const Dropdown = ({ options = [], selected, onChange }) => {
   };
 
   return (
-    <Container onClick={handleOnClick} ref={(r) => (wrapperRef.current = r)}>
-      <Selected>{selectedOption ? selectedOption.label : ""}</Selected>
-      <Icon>
-        <DownArrow />
-      </Icon>
-      {focus && (
-        <Options>
-          {options.map(({ label, value }) => (
-            <Option onClick={handleOptionSelected(value)} key={value}>
-              {label}
-            </Option>
-          ))}
-        </Options>
-      )}
-    </Container>
+    <Wrapper>
+      <Container onClick={handleOnClick} ref={(r) => (wrapperRef.current = r)}>
+        <Selected>{selectedOption.label}</Selected>
+        <Icon>
+          <DownArrow />
+        </Icon>
+        {focus && (
+          <Options>
+            {options.map(({ label, value }) => (
+              <Option onClick={handleOptionSelected(value)} key={value}>
+                {label}
+              </Option>
+            ))}
+          </Options>
+        )}
+      </Container>
+
+      {hint && <Hint>{hint}</Hint>}
+    </Wrapper>
   );
 };
 
