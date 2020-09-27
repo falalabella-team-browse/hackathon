@@ -18,6 +18,7 @@ const Shell = () => {
 			<Route path="/:userId" exact>
 				<UserLanding />
 			</Route>
+			<Route path="/:userId" exact></Route>
 			<Route path="/:userId/:productId" exact>
 				<ProductLanding />
 			</Route>
