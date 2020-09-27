@@ -111,8 +111,8 @@ const postHandler = fastify => async (req, reply) => {
 		description: description,
 		rating: rating,
 		reviewStatus,
-		verifiedPurchase: isverifiedPurchase,
-		review_score,
+		verifiedPurchase,
+		review_score: sentimentData.review_score,
 		imageLink: ids,
 	};
 
@@ -364,7 +364,7 @@ const averageRatings = (fastify, method = 'average') => async (req, reply) => {
 };
 
 const histogram = fastify => async (req, reply) => {
-	const { reviewId } = req.params;
+	const { id } = req.params;
 
 	const headers = {
 		Authorization: 'Basic ZWxhc3RpYzptRG9HTFA1VmNuU3poNEVWeU4wek1FV0o=',
@@ -376,7 +376,7 @@ const histogram = fastify => async (req, reply) => {
 		size: 0,
 		query: {
 			bool: {
-				must: [generateQuery('entityId', reviewId)],
+				must: [generateQuery('entityId', id)],
 			},
 		},
 		aggs: aggregator_Histogram,
@@ -456,6 +456,7 @@ const searchRatings = fastify => async (req, reply) => {
 		sort: [sortBy],
 		aggs: aggregator_Average,
 	};
+
 	const response = await fastify.restClient.post(url, reqBody, headers);
 
 	if (response && response.error) {
@@ -508,5 +509,5 @@ module.exports = async fastify => {
 	fastify.get('/ratingsAndReviews/:reviewId', apiSchemas.getReviewById, getHandler(fastify));
 	fastify.get('/averageRatings/:id', apiSchemas.aggregation, averageRatings(fastify, 'average'));
 	fastify.get('/analytics/:id', apiSchemas.analytics, averageRatings(fastify, 'analytics'));
-	fastify.get('/histogram/:reviewId', apiSchemas.histogram, histogram(fastify));
+	fastify.get('/histogram/:id', apiSchemas.histogram, histogram(fastify));
 };

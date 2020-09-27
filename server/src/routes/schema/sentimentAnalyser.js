@@ -73,26 +73,6 @@ const analyserSchema = {
 	},
 };
 
-const imageSchema = {
-	schema: {
-		description: 'This API is to get the image upload support for the reviews and ratings',
-		tags: ['In House Algorithm'],
-
-		response: {
-			500: {
-				description: 'Internal Server Error',
-				type: 'object',
-				properties: {
-					error: {
-						type: 'object',
-					},
-				},
-			},
-		},
-	},
-};
-
 module.exports = {
 	analyserSchema,
-	imageSchema,
 };
