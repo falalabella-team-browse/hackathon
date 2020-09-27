@@ -1,12 +1,12 @@
 
 const getReviewById =  {
 	schema: {
-	  description: 'This API is to create the new review and ratings for a product ',
+	  description: 'This API is to get the review and ratings with reviewId ',
 	  tags: ['For Admin and Analytics'],
 	  params: {
 		type: 'object',
 		properties: {
-          id: { 
+			    reviewId: { 
             type: 'string',
           }
 		}
@@ -16,7 +16,7 @@ const getReviewById =  {
 			description: 'Successful response',
 			type: 'object',
 			properties:{
-					"id":{
+					"reviewId":{
 						"type":"string"
 					},
 					"entityId":{
@@ -79,16 +79,17 @@ const getReviewById =  {
 	}
  }
 
-
 const getReviews =  {
 	schema: {
-	  description: 'This API is to create the new review and ratings for a product ',
+	  description: 'This API is to get all reviews and ratings for the product, all abusive reviews, all removed reviews, all published reviews with sortby and pagination feature',
 	  tags: ['For Client', 'For Admin and Analytics'],
 	  params: {
 		type: 'object',
 		properties: {
-          sort : { 
+          sort : {
 						type: 'string',
+						default: 'review_score:desc',
+						description:'Relevant -> review_score:desc ,  Recent -> created_date:desc, High to low -> rating:desc, Low to high -> rating:asc, Most Helpful -> helpful_count:desc'
           },
           verifiedPurchase : { 
             type: 'boolean',
@@ -112,6 +113,12 @@ const getReviews =  {
 					"data":{
 						"type":"object",
 						"properties":{
+								"totalNumberOfReviews":{
+									"type":"integer",
+								},
+								"averageRating":{
+									"type":"string",
+								},
 								"data":{
 									"type":"array",
 									"items":{
@@ -196,13 +203,15 @@ const getReviews =  {
 
 const getMyReviews =  {
 	schema: {
-	  description: 'This API is to get all the reviews created by the author',
-	  tags: ['For Client', 'For Admin and Analytics'],
+	  description: 'This API is to get all reviews and ratings by the author. All abusive reviews, all removed reviews, all published reviews with sortby and pagination feature',
+	  tags: ['For Client'],
 	  params: {
 		type: 'object',
 		properties: {
           sort : { 
 						type: 'string',
+						default: 'review_score:desc',
+						description:'Relevant -> review_score:desc ,  Recent-> created_date:desc, High to low -> rating:desc, Low to high -> rating:asc, Most Helpful -> helpful_count:desc'
           },
           pageNo : { 
             type: 'number',
@@ -220,6 +229,12 @@ const getMyReviews =  {
 			description: 'Successful response',
 			type: 'object',
 			properties: {
+					"totalNumberOfReviews":{
+						"type":"integer",
+					},
+					"averageRating":{
+						"type":"string",
+					},
 					"data":{
 						"type":"object",
 						"properties":{
