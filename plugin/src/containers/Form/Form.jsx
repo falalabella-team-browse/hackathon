@@ -202,7 +202,7 @@ const ReviewForm = ({ onClose, onChange, edit, value }) => {
     default:
       return (
         <Container>
-          <Heading.H1>Tu opinión nos importa ¡Evalúa tu producto!</Heading.H1>
+          <Heading.H1>Your opinion matters to us!</Heading.H1>
           <ModalCloseButton onClick={onClose}>
             <Close />
           </ModalCloseButton>
@@ -215,26 +215,26 @@ const ReviewForm = ({ onClose, onChange, edit, value }) => {
             gap={4}
           />
 
-          <Title>Título del comentario</Title>
+          <Title>Title</Title>
           <TextInput
-            placeholder="Ejemplo: ¡Lo puedo llevar a todas partes!"
+            placeholder="Example: I can take it everywhere!"
             value={data.title}
             onChange={handleChange("title")}
           />
 
-          <Title>Comentario</Title>
+          <Title>Review</Title>
           <TextArea
-            placeholder="Es muy fácil de trasladar, es liviano y se cierra y abre fácilmente…"
+            placeholder="It is very easy to move, it is light and it closes and opens easily ..."
             onChange={handleChange("content")}
             value={data.content}
           />
 
-          <Title>Subir foto</Title>
+          <Title>Upload Image</Title>
           <ImagePicker images={images} setImages={setImages} />
 
           {error && <ErrorText>{error}</ErrorText>}
 
-          <FilledButton onClick={onSubmit}>Publicar comentario</FilledButton>
+          <FilledButton onClick={onSubmit}>Publish Comment</FilledButton>
         </Container>
       );
   }

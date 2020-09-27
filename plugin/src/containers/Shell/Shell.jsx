@@ -101,14 +101,14 @@ const AppShell = () => {
 
   return (
     <Container>
-      <Heading.H1>Comentarios</Heading.H1>
+      <Heading.H1>Comments</Heading.H1>
 
       <ReviewsSummarySection>
         <ReviewSummary rating={data.rating} count={data.reviewCount} />
         <RatingView rating={data.rating} />
         <RatingButtonContainer>
           <OutlinedButton onClick={handleCreateModal}>
-            Escribir comentario
+            Write comment
           </OutlinedButton>
         </RatingButtonContainer>
       </ReviewsSummarySection>
