@@ -28,7 +28,7 @@ const resolvePath = (path) => {
 };
 
 const publicHandler = async (fastify, _, next) => {
-  fastify.get("/*", async (req, res) => {
+  fastify.get("/*", { schema : { hide: true }}, async (req, res) => {
     const { "*": path } = req.params;
 
     const absPath = resolvePath(join(PUBLIC_DIR, path || "index.html"));

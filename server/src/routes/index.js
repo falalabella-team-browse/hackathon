@@ -4,7 +4,7 @@ const { createReadStream } = require("fs");
 const { imageSchema } = require('./schema/sentimentAnalyser');
 
 const routes = async (fastify, opt, next) => {
-  fastify.get("/", (_, res) => {
+  fastify.get("/live", { schema : { hide: true }}, (_, res) => {
     res.send({
       success: true,
       message: "Server is ip...",
