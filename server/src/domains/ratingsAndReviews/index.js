@@ -413,6 +413,7 @@ const searchRatings = fastify => async (req, reply) => {
 		pageNo = 0,
 		entityId = '',
 		reviewStatus = 'Published',
+		author = ''
 	} = req.query;
 
 	const headers = {
@@ -424,6 +425,7 @@ const searchRatings = fastify => async (req, reply) => {
 		verifiedPurchase,
 		entityId,
 		reviewStatus,
+		author
 	};
 	const mustMatch = Object.keys(filters)
 		.filter(key => filters[key])
@@ -480,6 +482,7 @@ module.exports = async fastify => {
 	fastify.post('/ratingsAndReviews/edit', apiSchemas.editReviewSchema,  editHandler(fastify));
 	fastify.post('/ratingsAndReviews/updateStatus', apiSchemas.updateReviewSchema, updateStatus(fastify));
 	fastify.get('/ratingsAndReviews', apiSchemas.getReviews, searchRatings(fastify));
+	fastify.get('/myReviews', apiSchemas.getMyReviews, searchRatings(fastify));
 	fastify.get('/ratingsAndReviews/:id', apiSchemas.getReviewById, getHandler(fastify));
 	fastify.get('/averageRatings/:id', apiSchemas.aggregation, averageRatings(fastify, 'average'));
 	fastify.get('/analytics/:id', apiSchemas.analytics, averageRatings(fastify, 'analytics'));
