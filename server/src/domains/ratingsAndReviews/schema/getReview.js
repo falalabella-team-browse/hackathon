@@ -92,17 +92,25 @@ const getReviews = {
 				},
 				verifiedPurchase: {
 					type: 'boolean',
+					default: false
 				},
 				pageNo: {
 					type: 'number',
+					default: 0
 				},
 				entityId: {
 					type: 'string',
+					default: '',
 				},
 				reviewStatus: {
 					type: 'string',
+					default: 'Published',
 				},
-			},
+				channel: {
+					type: 'string',
+					default: 'client',
+				}
+			}
 		},
 		response: {
 			200: {
@@ -214,18 +222,21 @@ const getMyReviews = {
 					type: 'string',
 					default: 'review_score:desc',
 					description:
-						'Relevant -> review_score:desc ,  Recent-> created_date:desc, High to low -> rating:desc, Low to high -> rating:asc, Most Helpful -> helpful_count:desc',
+						'Relevant -> review_score:desc ,  Recent -> created_date:desc, High to low -> rating:desc, Low to high -> rating:asc, Most Helpful -> helpful_count:desc',
 				},
 				pageNo: {
 					type: 'number',
+					default: 0
 				},
 				author: {
 					type: 'string',
+					default: ''
 				},
 				reviewStatus: {
 					type: 'string',
-				},
-			},
+					default: 'Published',
+				}
+			}
 		},
 		response: {
 			200: {

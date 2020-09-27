@@ -293,32 +293,32 @@ const Admin = () => {
 	};
 
 	const handleSearch = () => {
-		let query = '';
+		let query = 'channel=admin';
 		if (reviewStatus) {
-			query = query.concat(`reviewStatus=${reviewStatus}&`);
+			query = query.concat(`&reviewStatus=${reviewStatus}`);
 		}
 		if (reviewSortBy) {
-			query = query.concat(`sort=${reviewSortBy}&`);
+			query = query.concat(`&sort=${reviewSortBy}`);
 		}
 		if (entity) {
-			query = query.concat(`entityId=${entity}`);
+			query = query.concat(`&entityId=${entity}`);
 		}
 		datafetcher(query);
 	};
 
 	const handlePaginationSearch = page => {
-		let query = '';
+		let query = 'channel=admin';
 		if (reviewStatus) {
-			query = query.concat(`reviewStatus=${reviewStatus}&`);
+			query = query.concat(`&reviewStatus=${reviewStatus}`);
 		}
 		if (reviewSortBy) {
-			query = query.concat(`sort=${reviewSortBy}&`);
+			query = query.concat(`&sort=${reviewSortBy}`);
 		}
 		if (entity) {
-			query = query.concat(`entityId=${entity}`);
+			query = query.concat(`&entityId=${entity}`);
 		}
 		if (page) {
-			query = query.concat(`pageNo=${page}`);
+			query = query.concat(`&pageNo=${page}`);
 		}
 		datafetcher(query);
 	};

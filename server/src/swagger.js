@@ -12,8 +12,8 @@ const options = {
         url: 'https://swagger.io',
         description: 'Find more info here'
       },
-      host: 'https://hackathon.rlab.app',
-      schemes: ['http'],
+      host: 'hackathon.rlab.app',
+      schemes: ['https'],
       consumes: ['application/json'],
       produces: ['application/json']
     }

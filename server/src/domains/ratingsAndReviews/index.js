@@ -505,6 +505,7 @@ const searchRatings = fastify => async (req, reply) => {
 		entityId = '',
 		reviewStatus = 'Published',
 		author = '',
+		channel = 'client'
 	} = req.query;
 
 	const headers = {
@@ -543,7 +544,7 @@ const searchRatings = fastify => async (req, reply) => {
 		aggs: aggregator_Average,
 	};
 
-	const postReqBody =  sort === 'review_score:desc' && entityId ? getSortByRelevancyQuery(entityId, from, size) : reqBody;
+	const postReqBody =  (channel === 'client' && sort === 'review_score:desc') && entityId ? getSortByRelevancyQuery(entityId, from, size) : reqBody;
 
 	const response = await fastify.restClient.post(url, postReqBody, headers);
 
