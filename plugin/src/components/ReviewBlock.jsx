@@ -125,9 +125,17 @@ const ReviewBlock = ({ review, onChange }) => {
 
 	const updateHelpFulContent = e => {
 		e.preventDefault();
-		let count = hfCount == helpful_count ? hfCount + 1 : hfCount - 1;
+		let count = hfCount >= helpful_count ? hfCount + 1 : hfCount - 1;
 		setHfCount(count);
-		http.increamenHelpfulCount(review);
+		http.increamenHelpfulCount({
+			id,
+			helpful_count: count,
+			verifiedPurchase,
+			rating,
+			title,
+			description,
+			imageLink,
+		});
 	};
 
 	const handleEditButtonClicked = () => {
