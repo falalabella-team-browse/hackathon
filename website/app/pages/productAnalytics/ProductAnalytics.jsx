@@ -3,7 +3,6 @@ import { Button, Jumbotron } from 'react-bootstrap';
 import styled from 'styled-components';
 import FullScreenLoader from '../../components/FullScreenLoader';
 import restClients from '../../http/reviews';
-import PieChartGraph from '../../components/graphs';
 import { useHistory } from 'react-router-dom';
 import RatingBar from '../../components/RatingsBar/RatingsBar';
 import DonutChart from 'react-donut-chart';

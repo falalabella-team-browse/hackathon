@@ -479,12 +479,20 @@ const searchRatings = fastify => async (req, reply) => {
 		};
 	});
 
+	let totalSentiment = 0;
+	sanitisedData.forEach(data => {
+		totalSentiment = totalSentiment + data.sentiment;
+	});
+
+	const averageSentiment = totalSentiment / sanitisedData.length;
+
 	const results = {
 		totalNumberOfReviews,
 		averageRating,
 		data: sanitisedData,
 		meta: {
 			total: response.hits.total.value,
+			averageSentiment,
 		},
 	};
 	handleResponse(results, reply);

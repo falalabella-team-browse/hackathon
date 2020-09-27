@@ -3,7 +3,6 @@ import Pagination from '@material-ui/lab/Pagination';
 import styled from 'styled-components';
 import restClients from '../../http/reviews';
 import FullScreenLoader from '../../components/FullScreenLoader';
-import PieChartGraph from '../../components/graphs';
 import './emoji.css';
 
 const BodyWrapper = styled.div`

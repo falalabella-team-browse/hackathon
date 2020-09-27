@@ -1,0 +1,31 @@
+
+
+
+span.twa {
+    cursor: pointer;
+}
+
+span.twa.twa-smiling-face:after {
+    content: "\01F60A";
+    font-size: 25px;
+}
+
+span.twa.twa-star-struck:after {
+    content: "\01F929";
+    font-size: 25px;
+}
+
+span.twa.twa-zipper-mouth:after {
+    content: "\01F610";
+    font-size: 25px;
+}
+
+span.twa.twa-unamused-face:after {
+    content: "\01F612";
+    font-size: 25px;
+}
+
+span.twa.twa-pouting-face:after {
+    content: "\01F621";
+    font-size: 25px;
+}
