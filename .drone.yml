@@ -43,7 +43,7 @@ steps:
       - echo "$KUBECONFIG_FILE" > kubeconfig.b64
       - export KUBECONFIG="$PWD/kubeconfig.yml"
       - base64 -d kubeconfig.b64 > kubeconfig.yml
-      - helm upgrade --wait --install --atomic helm/rnr/. -n falabella -f helm/values.yaml --set-string image.tag="${DRONE_COMMIT:0:8}"
+      - helm upgrade --wait --install --atomic rnr helm/rnr/. -n falabella -f helm/values.yaml --set-string image.tag="${DRONE_COMMIT:0:8}"
     # when:
     #   event:
     #     - promote

@@ -1,6 +1,6 @@
 
 imagePullSecrets:
-  - name: regcred
+- name: regcred
 
 ingress:
   enabled: true
@@ -26,7 +26,7 @@ persistentVolume:
 resources:
   limits:
     cpu: 300m
-    memory: 1Gii
+    memory: 1Gi
   requests:
     cpu: 300m
     memory: 1Gi
