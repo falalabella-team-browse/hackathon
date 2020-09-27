@@ -79,7 +79,7 @@ const Dropdown = ({ options = [], selected, onChange }) => {
 
   return (
     <Container onClick={handleOnClick} ref={(r) => (wrapperRef.current = r)}>
-      <Selected>{selectedOption.label}</Selected>
+      <Selected>{selectedOption ? selectedOption.label : ""}</Selected>
       <Icon>
         <DownArrow />
       </Icon>

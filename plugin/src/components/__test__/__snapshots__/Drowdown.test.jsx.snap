@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Dropdown should render properly without any props 1`] = `
+"<Dropdown onChange={[Function: mockConstructor]}>
+  <Dropdown__Container onClick={[Function: handleOnClick]}>
+    <div onClick={[Function: handleOnClick]} className=\\"Dropdown__Container-rnr-__hauupl-0 fJWjsI\\">
+      <Dropdown__Selected>
+        <span className=\\"Dropdown__Selected-rnr-__hauupl-1 kSECSH\\" />
+      </Dropdown__Selected>
+      <Dropdown__Icon>
+        <div className=\\"Dropdown__Icon-rnr-__hauupl-4 fVRfmr\\">
+          <DownArrow>
+            <svg version=\\"1.1\\" id=\\"Layer_1\\" xmlns=\\"http://www.w3.org/2000/svg\\" x=\\"0px\\" y=\\"0px\\" viewBox=\\"0 0 512.011 512.011\\" height=\\"15px\\" width=\\"15px\\" style={{...}}>
+              <g>
+                <g>
+                  <path fill=\\"#000\\" d=\\"M505.755,123.592c-8.341-8.341-21.824-8.341-30.165,0L256.005,343.176L36.421,123.592c-8.341-8.341-21.824-8.341-30.165,0 s-8.341,21.824,0,30.165l234.667,234.667c4.16,4.16,9.621,6.251,15.083,6.251c5.462,0,10.923-2.091,15.083-6.251l234.667-234.667 C514.096,145.416,514.096,131.933,505.755,123.592z\\" />
+                </g>
+              </g>
+            </svg>
+          </DownArrow>
+        </div>
+      </Dropdown__Icon>
+    </div>
+  </Dropdown__Container>
+</Dropdown>"
+`;

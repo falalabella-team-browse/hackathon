@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Thumbs should render properly, with props 1`] = `ShallowWrapper {}`;

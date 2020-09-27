@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Heading H1 should render properly 1`] = `
+"<Heading__Heading1>
+  this is h1
+</Heading__Heading1>"
+`;
+
+exports[`Heading H2 should render properly 1`] = `
+"<Heading__Heading2>
+  this is h2
+</Heading__Heading2>"
+`;
+
+exports[`Heading H4 should render properly 1`] = `
+"<Heading__Heading4>
+  this is h1
+</Heading__Heading4>"
+`;

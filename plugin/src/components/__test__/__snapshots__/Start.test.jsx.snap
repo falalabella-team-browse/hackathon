@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Star should render properly, with default props 1`] = `ShallowWrapper {}`;
+
+exports[`Star should render properly, with some props 1`] = `ShallowWrapper {}`;
