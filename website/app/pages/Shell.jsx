@@ -11,7 +11,7 @@ const Shell = () => {
       <Route path="/admin" exact>
         <Admin />
       </Route>
-      <Route path="/:userId">
+      <Route path="/:userId" exact>
         <UserLanding />
       </Route>
       <Route path="/:userId/:productId">
