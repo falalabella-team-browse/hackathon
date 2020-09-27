@@ -14,7 +14,57 @@ const getReviewById =  {
 	  response: {
 		  200: {
 			description: 'Successful response',
-			type: 'object'
+			type: 'object',
+			properties:{
+					"id":{
+						"type":"string"
+					},
+					"entityId":{
+						"type":"string"
+					},
+					"rating":{
+						"type":"integer",
+						"format":"int32"
+					},
+					"title":{
+						"type":"string"
+					},
+					"description":{
+						"type":"string"
+					},
+					"author":{
+						"type":"string"
+					},
+					"created_date":{
+						"type":"string"
+					},
+					"modified_date":{
+						"type":"string"
+					},
+					"verifiedPurchase":{
+						"type":"boolean"
+					},
+					"helpful_count":{
+						"type":"integer",
+						"format":"int32"
+					},
+					"imageLink":{
+						"type":"array",
+						"items":{
+								
+						}
+					},
+					"sentiment":{
+						"type":"integer",
+						"format":"int32"
+					},
+					"reviewStatus":{
+						"type":"string"
+					},
+					"review_score":{
+						"type":"number"
+					}
+			}
 		  },
 		  500: {
 			  description: "Internal Server Error",
@@ -38,7 +88,7 @@ const getReviews =  {
 		type: 'object',
 		properties: {
           sort : { 
-            type: 'string',
+						type: 'string',
           },
           verifiedPurchase : { 
             type: 'boolean',
@@ -57,7 +107,79 @@ const getReviews =  {
 	  response: {
 		  200: {
 			description: 'Successful response',
-			type: 'object'
+			type: 'object',
+			properties: {
+					"data":{
+						"type":"object",
+						"properties":{
+								"data":{
+									"type":"array",
+									"items":{
+											"type":"object",
+											"properties":{
+												"id":{
+														"type":"string"
+												},
+												"entityId":{
+														"type":"string"
+												},
+												"rating":{
+														"type":"integer",
+														"format":"int32"
+												},
+												"title":{
+														"type":"string"
+												},
+												"description":{
+														"type":"string"
+												},
+												"author":{
+														"type":"string"
+												},
+												"created_date":{
+														"type":"string"
+												},
+												"modified_date":{
+														"type":"string"
+												},
+												"verifiedPurchase":{
+														"type":"boolean"
+												},
+												"helpful_count":{
+														"type":"integer",
+														"format":"int32"
+												},
+												"imageLink":{
+														"type":"array",
+														"items":{
+															
+														}
+												},
+												"sentiment":{
+														"type":"integer",
+														"format":"int32"
+												},
+												"reviewStatus":{
+														"type":"string"
+												},
+												"review_score":{
+														"type":"number"
+												}
+											}
+									}
+								},
+								"meta":{
+									"type":"object",
+									"properties":{
+											"total":{
+												"type":"integer",
+												"format":"int32"
+											}
+									}
+								}
+						}
+					}
+			}
 		  },
 		  500: {
 			  description: "Internal Server Error",

@@ -14,7 +14,33 @@ const aggregation =  {
 	  response: {
 		  200: {
 			description: 'Successful response',
-			type: 'object'
+			type: 'object',
+			type: 'object',
+			properties: {
+					"totalNumberOfReviews":{
+						"type":"integer",
+						"format":"int32"
+					},
+					"averageRating":{
+						"type":"string",
+						"format":"nullable"
+					},
+					"rating_buckets":{
+						"type":"array",
+						"items":{
+								"type":"object",
+								"properties":{
+									"key":{
+											"type":"string"
+									},
+									"value":{
+											"type":"integer",
+											"format":"int32"
+									}
+								}
+						}
+					}
+			}
 		  },
 		  500: {
 			  description: "Internal Server Error",
@@ -44,7 +70,61 @@ const analytics =  {
 	  response: {
 		  200: {
 			description: 'Successful response',
-			type: 'object'
+			type: 'object',
+			properties: {
+				"totalNumberOfReviews":{
+						"type":"integer",
+						"format":"int32"
+					},
+					"averageRating":{
+						"type":"number"
+					},
+					"rating_buckets":{
+						"type":"array",
+						"items":{
+								"type":"object",
+								"properties":{
+									"key":{
+											"type":"string"
+									},
+									"value":{
+											"type":"integer",
+											"format":"int32"
+									}
+								}
+						}
+					},
+					"sentiment_buckets":{
+						"type":"array",
+						"items":{
+								"type":"object",
+								"properties":{
+									"key":{
+											"type":"string"
+									},
+									"value":{
+											"type":"integer",
+											"format":"int32"
+									}
+								}
+						}
+					},
+					"review_status":{
+						"type":"array",
+						"items":{
+								"type":"object",
+								"properties":{
+									"key":{
+											"type":"string"
+									},
+									"value":{
+											"type":"integer",
+											"format":"int32"
+									}
+								}
+						}
+					}
+			}
 		  },
 		  500: {
 			  description: "Internal Server Error",
@@ -74,7 +154,35 @@ const histogram =  {
 	  response: {
 		  200: {
 			description: 'Successful response',
-			type: 'object'
+			type: 'object',
+			properties: {
+				"totalNumberOfReviews":{
+					 "type":"integer",
+					 "format":"int32"
+				},
+				"rating_per_hour":{
+					 "type":"array",
+					 "items":{
+							"type":"object",
+							"properties":{
+								 "date":{
+										"type":"string"
+								 },
+								 "timestamp":{
+										"type":"integer",
+										"format":"int64"
+								 },
+								 "value":{
+										"type":"integer",
+										"format":"int32"
+								 },
+								 "average":{
+										"type":"number"
+								 }
+							}
+					 }
+				}
+		 }
 		  },
 		  500: {
 			  description: "Internal Server Error",
