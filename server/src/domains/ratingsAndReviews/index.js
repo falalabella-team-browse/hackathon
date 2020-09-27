@@ -111,8 +111,8 @@ const postHandler = fastify => async (req, reply) => {
 		description: description,
 		rating: rating,
 		reviewStatus,
-		verifiedPurchase: isverifiedPurchase,
-		review_score,
+		verifiedPurchase,
+		review_score: sentimentData.review_score,
 		imageLink: ids,
 	};
 
